@@ -18,19 +18,27 @@ x = sdpvar(nx,gridSz+1);%1:sigma 2:sigma_dot, 3:x1, 4:x1_dot, 5:theta1, 6:theta1
 u = sdpvar(nu, gridSz);%1:de1, 2:m_ctr, 3:dr1, 4:ds1
 p = getParamSingle();
 
-%initial condition & limits
-x0 = [0.0; 0.0];
-u_up = [2];
-u_lw = [-2];
+%initial/final condition & limits
+x0_up = [0; 0];
+x0_lw = [0; 0];
+xf_up = [inf; 0];
+xf_lw = [-inf; 0];
+u_up = [0];
+u_lw = [-50];
 %% Contraints & Objective
-%initial state
-Constraints = [x(:, 1) == x0];
-
+Constraints = [];
 %boundary constraints
+%   initial state boundary constraints
+Constraints = [Constraints, x(:, 1) >= x0_lw, x(:, 1) <= x0_up];
+%   final state boundary constraints
+Constraints = [Constraints, x(:, end) >= xf_lw, x(:, end) <= xf_up];
+
+
+Constraints = [Constraints, ]
 
 %path constraints
 
-%control limits
+%   control limits
 Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];
 
 %dynamics and objective
@@ -54,6 +62,7 @@ if sol.problem == 0
  states = value(x);
  ctrs = value(u);
  plot_aerogen_single(states,ctrs, timeVec)
+ disp(-value(Objective)*0.000277778)
 
 else
  disp('Hmm, something went wrong!');

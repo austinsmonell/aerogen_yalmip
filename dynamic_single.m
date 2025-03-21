@@ -13,7 +13,7 @@ sigma_dot = x(2,:);
 % psi1_dot = x(10, :);
 
 %Controls: dist1
-m_ctr = u(1, :);
+m_ctr = u(1, :)*1000;
 % de1 = u(2, :)*10000000;
 % dr1 = u(3, :);
 % ds1 = u(4, :);
@@ -49,7 +49,10 @@ CDds = p(29);
 omega = p(30);
 
 %% dynamics
-sigma_dot_dot = m_ctr/moi_g+2;
+
+
+F1_aero_r = -70000;
+sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 %% package derivitives
 dx = [sigma_dot; sigma_dot_dot];
 end

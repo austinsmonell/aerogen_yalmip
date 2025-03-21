@@ -1,4 +1,5 @@
 function  plot_aerogen_single(states,ctrs, time)
+    dt = time(2)-time(1);
     figure
     subplot(2, 2, 1)
     plot(time, states(1, :)/(2*pi))
@@ -14,11 +15,11 @@ function  plot_aerogen_single(states,ctrs, time)
     plot(time(1:end-1), ctrs(1, :))
     title('Gen Moment')
     xlabel('Time [s]')
-    ylabel('Gen Moment [Nm]')
+    ylabel('Gen Moment [kNm]')
     subplot(2, 2, 4)
-    plot(time(1:end-1), -ctrs(1, :).*states(2, 1:end-1))
+    plot(time(1:end-1), (-ctrs(1, :).*states(2, 1:end-1))/dt)
     title('Objective')
     xlabel('Time [s]')
-    ylabel('Power [W]')
+    ylabel('Power [kW]')
 
 end
