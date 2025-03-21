@@ -25,6 +25,8 @@ xf_up = [inf; 0];
 xf_lw = [-inf; 0];
 u_up = [0];
 u_lw = [-50];
+x_up = [inf; 4*(2*pi)];
+x_lw = [-inf; -4*(2*pi)];
 %% Contraints & Objective
 Constraints = [];
 %boundary constraints
@@ -33,10 +35,9 @@ Constraints = [Constraints, x(:, 1) >= x0_lw, x(:, 1) <= x0_up];
 %   final state boundary constraints
 Constraints = [Constraints, x(:, end) >= xf_lw, x(:, end) <= xf_up];
 
-
-Constraints = [Constraints, ]
-
 %path constraints
+%   state limits
+Constraints = [Constraints, x<=ones(nx, gridSz+1).*x_up, x>=ones(nx, gridSz+1).*x_lw];
 
 %   control limits
 Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];
