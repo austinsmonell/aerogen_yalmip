@@ -6,34 +6,36 @@ yalmip('clear')
 
 
 % Define horizon
-tf = 10;
-gridSz = 1000;
+tf = 5;
+gridSz = 50;
 dt = tf/gridSz;
 timeVec = linspace(0, tf, gridSz+1);
 
 % Define variables/params
-nx = 2; 
-nu = 1; 
+nx = 4; 
+nu = 2; 
 x = sdpvar(nx,gridSz+1);%1:sigma 2:sigma_dot, 3:x1, 4:x1_dot, 5:theta1, 6:theta1_dot, 7:y1, 8:y1_dot, 9:psi1, 10:psi1_dot
 u = sdpvar(nu, gridSz);%1:de1, 2:m_ctr, 3:dr1, 4:ds1
 p = getParamSingle();
 
 %initial/final condition & limits
-x0_up = [0; 0];
-x0_lw = [0; 0];
-xf_up = [inf; 0];
-xf_lw = [-inf; 0];
-u_up = [0];
-u_lw = [-50];
-x_up = [inf; 4*(2*pi)];
-x_lw = [-inf; -4*(2*pi)];
+u_up = [0; 10];
+u_lw = [-400; -10];
+x_up = [inf; inf; inf; 50];
+x_lw = [-inf; -inf; -inf; -50];
+x0_up = [0; 10; 0; 20];
+x0_lw = [0; 0; 0; 0];
+xf_up = [inf; inf; 0; 20];
+xf_lw = [-inf; -inf; 0; 0];
 %% Contraints & Objective
 Constraints = [];
-%boundary constraints
-%   initial state boundary constraints
+%   intial/final conditions
+%   initial state limits
 Constraints = [Constraints, x(:, 1) >= x0_lw, x(:, 1) <= x0_up];
-%   final state boundary constraints
+%   final state limits
 Constraints = [Constraints, x(:, end) >= xf_lw, x(:, end) <= xf_up];
+%   boundary constraints
+Constraints = [Constraints, x(2, 1) == x(2, end), x(3, 1) == x(3, end), x(4, 1) == x(4, end)];
 
 %path constraints
 %   state limits

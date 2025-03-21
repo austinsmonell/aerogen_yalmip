@@ -3,8 +3,8 @@ function dx = dynamic_single(x, u, p)
 % States: theta, theta_dot
 sigma = x(1,:);
 sigma_dot = x(2,:);
-% x1 = x(3, :);
-% x1_dot = x(4, :);
+x1 = x(3, :);
+x1_dot = x(4, :);
 % theta1 = x(5, :);
 % theta1_dot = x(6, :);
 % y1 = x(7, :);
@@ -13,8 +13,8 @@ sigma_dot = x(2,:);
 % psi1_dot = x(10, :);
 
 %Controls: dist1
-m_ctr = u(1, :)*1000;
-% de1 = u(2, :)*10000000;
+m_ctr = u(1, :);
+de1 = u(2, :);
 % dr1 = u(3, :);
 % ds1 = u(4, :);
 
@@ -49,10 +49,20 @@ CDds = p(29);
 omega = p(30);
 
 %% dynamics
+r1_dot = sigma_dot*r_gen;%done
+va1_r = -r1_dot+vw;%done
+va1_xy = x1_dot;
 
+q1 = 0.5*rho*(va1_r.^2+va1_xy.^2);%done
+Cl1 = (CL0);
+L1 = q1*S.*Cl1;%done
+F1_zb = -L1;
 
-F1_aero_r = -70000;
+x1_dot_dot = de1;
+
+F1_aero_r = F1_zb;
+
 sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 %% package derivitives
-dx = [sigma_dot; sigma_dot_dot];
+dx = [sigma_dot; sigma_dot_dot; x1_dot; x1_dot_dot];
 end
