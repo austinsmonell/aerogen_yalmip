@@ -20,10 +20,10 @@ p = getParamSingle();
 
 %initial/final condition & limits
 u_up = [0; 10];
-u_lw = [-400; -10];
+u_lw = [-500; -10];
 x_up = [inf; inf; inf; 50];
 x_lw = [-inf; -inf; -inf; -50];
-x0_up = [0; 10; 0; 20];
+x0_up = [0; inf; 0; 20];
 x0_lw = [0; 0; 0; 0];
 xf_up = [inf; inf; 0; 20];
 xf_lw = [-inf; -inf; 0; 0];
