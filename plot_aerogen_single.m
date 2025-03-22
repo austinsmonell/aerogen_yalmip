@@ -37,24 +37,33 @@ function  plot_aerogen_single(states,ctrs, time)
     figure
 
     subplot(plot_rows, plot_cols, fig_val)
+    hold on
     plot(time, states(3, :))
-    title('X')
+    plot(time, states(5, :))
+    title('Position')
     xlabel('Time [s]')
-    ylabel('X [m]')
+    ylabel('Position [m]')
+    legend('X', 'Y')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
+    hold on
     plot(time, states(4, :))
-    title('X dot')
+    plot(time, states(6, :))
+    title('Speed')
     xlabel('Time [s]')
-    ylabel('X dot [m/s]')
+    ylabel('Speed [m/s]')
+    legend('X', 'Y')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
+    hold on
     plot(time(1:end-1), ctrs(2, :))
-    title('de')
+    plot(time(1:end-1), ctrs(3, :))
+    title('Control')
     xlabel('Time [s]')
-    ylabel('De []')
+    ylabel('ctr []')
+    legend('dx', 'dy')
     fig_val = fig_val+1;
 
 %     subplot(plot_rows, plot_cols, fig_val)
