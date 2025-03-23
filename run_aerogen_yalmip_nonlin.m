@@ -7,7 +7,7 @@ yalmip('clear')
 
 % Define horizon
 tf = 10;
-gridSz = 30;
+gridSz = 100;
 dt = tf/gridSz;
 timeVec = linspace(0, tf, gridSz+1);
 
@@ -19,12 +19,12 @@ u = sdpvar(nu, gridSz);%1:de1, 2:m_ctr, 3:dr1, 4:ds1
 p = getParamSingle();
 
 %initial/final condition & limits
-u_up = [0; 10; 1];
-u_lw = [-10000; -10; -1];
-x_up = [inf; inf; inf; inf; inf; 60];
-x_lw = [-inf; -inf; -inf; -inf; -inf; 10];
-x0_up = [0; 50; 0; 0; 0; 15];
-x0_lw = [0; 1; 0; 0; 0; 15];
+u_up = [0; 1; 0];
+u_lw = [-1000; -1; -10];
+x_up = [inf; inf; inf; inf; inf; 30];
+x_lw = [-inf; -inf; -inf; -inf; -inf; 1];
+x0_up = [0; 50; 0; 0; 0; 60];
+x0_lw = [0; 1; 0; 0; 0; 1];
 
 %% Contraints & Objective
 Constraints = [];
@@ -34,7 +34,8 @@ Constraints = [];
 Constraints = [Constraints, x(:, 1) >= x0_lw, x(:, 1) <= x0_up];
 
 %   boundary constraints
-Constraints = [Constraints, x(1, 1) <= x(1, end), x(2, 1) == x(2, end), abs(x(3, 1) - x(3, end))<= 1e-10, abs(x(4, 1) - x(4, end))<= 1e-10];
+Constraints = [Constraints, x(1, 1) <= x(1, end), x(2, 1) == x(2, end), abs(x(3, 1) - x(3, end))<= 1e-6, abs(x(4, 1) - x(4, end))<= 1e-6...
+               abs(x(5, 1) - (x(5, end)-2*pi))<= 1e-6, x(6, 1) == x(6, end)];
 
 %path constraints
 

@@ -76,10 +76,10 @@ function  plot_aerogen_single(states,ctrs, time)
     subplot(plot_rows, plot_cols, fig_val)
     hold on
     plot(time(1:end-1), ctrs(2, :))
-%     plot(time(1:end-1), ctrs(3, :))
+    plot(time(1:end-1), ctrs(3, :))
     title('Control')
     xlabel('Time [s]')
-    ylabel('ctr []')
+    legend('dr', 'thr')
     fig_val = fig_val+1;
 
     %%
