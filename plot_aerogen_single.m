@@ -1,6 +1,6 @@
-function  plot_aerogen_single(states,ctrs, time)
+function  plot_aerogen_single(states,ctrs,p,time)
     dt = time(2)-time(1);
-    %%
+    %% Generator
     plot_rows = 2; plot_cols = 2;fig_val = 1;
     figure
 
@@ -32,7 +32,7 @@ function  plot_aerogen_single(states,ctrs, time)
     ylabel('Power [kW]')
     fig_val = fig_val+1;
 
-    %%
+    %% Position
     plot_rows = 2; plot_cols = 2;fig_val = 1;
     figure
 
@@ -67,10 +67,10 @@ function  plot_aerogen_single(states,ctrs, time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, states(5, :))
-    title('Attitude')
+    plot(time, states(5, :)*180/pi)
+    title('Heading')
     xlabel('Time [s]')
-    ylabel('Psi [rad]')
+    ylabel('Psi [deg]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
@@ -79,13 +79,33 @@ function  plot_aerogen_single(states,ctrs, time)
     plot(time(1:end-1), ctrs(3, :))
     title('Control')
     xlabel('Time [s]')
-    legend('dr', 'thr')
+    legend('dr', 'ds')
     fig_val = fig_val+1;
 
-    %%
+    %% 3D Plot
     figure
-    plot(states(3, :), states(4, :))
+    plot3(states(3, :), states(4, :), states(1, :)*p(1))
+    axis equal 
     title('3D')
     xlabel('X [m]')
     ylabel('Y [m]')
+
+    %% Attitude
+    plot_rows = 2; plot_cols = 2;fig_val = 1;
+    figure
+
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, states(7, :)*180/pi)
+    title('Attitude')
+    xlabel('Time [s]')
+    ylabel('Pitch [deg]')
+    fig_val = fig_val+1;
+
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time(1:end-1), ctrs(4, :))
+    title('Control [de]')
+    xlabel('Time [s]')
+    fig_val = fig_val+1;
 end

@@ -6,12 +6,14 @@ sigma_dot = x(2,:);
 x1 = x(3, :);
 y1 = x(4, :);
 psi1 = x(5, :);
-va = x(6, :);
+va1_xy = x(6, :);
+theta1 = x(7, :);
 
 %Controls: dist1
 m_ctr = u(1, :);
 dr1 = u(2, :);
-thr = u(3, :);
+ds1 = u(3, :);
+de1 = u(4, :);
 
 % extract parameters
 r_gen = p(1);
@@ -45,22 +47,25 @@ omega = p(30);
 %% dynamics
 r1_dot = sigma_dot*r_gen;%done
 va1_r = -r1_dot+vw;%done
-va1_xy = va;
-% alpha1 = range_angle(atan2(va1_r, va1_xy));
+alpha1 = theta1+atan2(va1_r, va1_xy);%done
 
 q1 = 0.5*rho*(va1_r.^2+va1_xy.^2);%done
-Cl1 = (CL0);
+Cl1 = (CL0+CLa*alpha1);%done
 L1 = q1*S.*Cl1;%done
-F1_zb = -L1;
+Cd1 = (CD0+CD_eff_teth+e*Cl1.^2+CDds*ds1);
+D1 = q1*S.*Cd1;%done
+F1_zb = -sin(alpha1).*D1 - cos(alpha1).*L1;%done
+F1_xb = -cos(alpha1).*D1 + sin(alpha1).*L1;%done
 
 x1_dot = va1_xy.*cos(psi1);
 y1_dot = va1_xy.*sin(psi1);
 psi1_dot = dr1;
-va_dot = thr;
+theta1_dot = de1;
+va_dot = F1_xb/(m_ac+m_teth/3);
 
-F1_aero_r = F1_zb;
+F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 
 sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 %% package derivitives
-dx = [sigma_dot; sigma_dot_dot; x1_dot; y1_dot; psi1_dot; va_dot];
+dx = [sigma_dot; sigma_dot_dot; x1_dot; y1_dot; psi1_dot; va_dot; theta1_dot];
 end

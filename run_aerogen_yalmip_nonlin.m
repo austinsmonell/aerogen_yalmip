@@ -7,24 +7,24 @@ yalmip('clear')
 
 % Define horizon
 tf = 10;
-gridSz = 100;
+gridSz = 30;
 dt = tf/gridSz;
 timeVec = linspace(0, tf, gridSz+1);
 
 % Define variables/params
-nx = 6; 
-nu = 3; 
+nx = 7; 
+nu = 4; 
 x = sdpvar(nx,gridSz+1);%1:sigma 2:sigma_dot, 3:x1, 4:x1_dot, 5:theta1, 6:theta1_dot, 7:y1, 8:y1_dot, 9:psi1, 10:psi1_dot
 u = sdpvar(nu, gridSz);%1:de1, 2:m_ctr, 3:dr1, 4:ds1
 p = getParamSingle();
 
 %initial/final condition & limits
-u_up = [0; 1; 0];
-u_lw = [-1000; -1; -10];
-x_up = [inf; inf; inf; inf; inf; 30];
-x_lw = [-inf; -inf; -inf; -inf; -inf; 1];
-x0_up = [0; 50; 0; 0; 0; 60];
-x0_lw = [0; 1; 0; 0; 0; 1];
+u_up = [0; 1; 0; 0.1];
+u_lw = [-1000; -1; -10; -0.1];
+x_up = [inf; inf; inf; inf; inf; 40; pi/4];
+x_lw = [-inf; -inf; -inf; -inf; -inf; 1; -pi/4];
+x0_up = [0; 50; 0; 0; 0; 60; pi/4];
+x0_lw = [0; 1; 0; 0; 0; 1; -pi/4];
 
 %% Contraints & Objective
 Constraints = [];
@@ -35,7 +35,7 @@ Constraints = [Constraints, x(:, 1) >= x0_lw, x(:, 1) <= x0_up];
 
 %   boundary constraints
 Constraints = [Constraints, x(1, 1) <= x(1, end), x(2, 1) == x(2, end), abs(x(3, 1) - x(3, end))<= 1e-6, abs(x(4, 1) - x(4, end))<= 1e-6...
-               abs(x(5, 1) - (x(5, end)-2*pi))<= 1e-6, x(6, 1) == x(6, end)];
+               abs(x(5, 1) - (x(5, end)-2*pi))<= 1e-6, x(6, 1) == x(6, end), x(7, 1) == x(7, end)];
 
 %path constraints
 
@@ -43,13 +43,15 @@ Constraints = [Constraints, x(1, 1) <= x(1, end), x(2, 1) == x(2, end), abs(x(3,
 Constraints = [Constraints, x<=ones(nx, gridSz+1).*x_up, x>=ones(nx, gridSz+1).*x_lw];
 
 %   other limits
-% vw = p(13);
-% r_gen = p(1);
-% sigma_dot = x(2, :);
-% r1_dot = sigma_dot.*r_gen;%done
-% va1_r = -r1_dot+vw;%done
-% va1_xy = 30;
-% Constraints = [Constraints, va1_r ./ va1_xy <= tan(0.3), va1_r ./ va1_xy >= tan(-0.3)];
+sigma_dot = x(2, :);
+r_gen = p(1);
+vw = p(13);
+theta1 = x(7, :);
+va1_xy = x(6, :);
+
+r1_dot = sigma_dot*r_gen;
+va1_r = -r1_dot+vw;
+Constraints = [Constraints, va1_r./va1_xy <= tan(0.3-theta1), va1_r./va1_xy >= tan(-0.3-theta1)];
 
 %   control limits
 Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];
@@ -74,7 +76,7 @@ if sol.problem == 0
  % Extract and display value
  states = value(x);
  ctrs = value(u);
- plot_aerogen_single(states,ctrs, timeVec)
+ plot_aerogen_single(states,ctrs,p,timeVec)
  disp(-value(Objective)*0.000277778)
 
 else
