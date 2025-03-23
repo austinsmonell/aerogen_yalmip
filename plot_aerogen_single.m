@@ -39,37 +39,53 @@ function  plot_aerogen_single(states,ctrs, time)
     subplot(plot_rows, plot_cols, fig_val)
     hold on
     plot(time, states(3, :))
-    plot(time, states(5, :))
+    plot(time, states(4, :))
     title('Position')
     xlabel('Time [s]')
     ylabel('Position [m]')
     legend('X', 'Y')
     fig_val = fig_val+1;
 
+%     subplot(plot_rows, plot_cols, fig_val)
+%     hold on
+%     plot(time, states(4, :))
+%     plot(time, states(6, :))
+%     plot(time, sqrt(states(4, :).^2+states(6, :).^2))
+%     title('Speed')
+%     xlabel('Time [s]')
+%     ylabel('Speed [m/s]')
+%     legend('X', 'Y', 'SUM')
+%     fig_val = fig_val+1;
+
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, states(4, :))
     plot(time, states(6, :))
     title('Speed')
     xlabel('Time [s]')
-    ylabel('Speed [m/s]')
-    legend('X', 'Y')
+    ylabel('Va [mps]')
+    fig_val = fig_val+1;
+
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, states(5, :))
+    title('Attitude')
+    xlabel('Time [s]')
+    ylabel('Psi [rad]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
     plot(time(1:end-1), ctrs(2, :))
-    plot(time(1:end-1), ctrs(3, :))
+%     plot(time(1:end-1), ctrs(3, :))
     title('Control')
     xlabel('Time [s]')
     ylabel('ctr []')
-    legend('dx', 'dy')
     fig_val = fig_val+1;
 
-%     subplot(plot_rows, plot_cols, fig_val)
-%     plot(time(1:end-1), (-ctrs(1, :).*states(2, 1:end-1))/dt)
-%     title('Objective')
-%     xlabel('Time [s]')
-%     ylabel('Power [kW]')
-%     fig_val = fig_val+1;
+    %%
+    figure
+    plot(states(3, :), states(4, :))
+    title('3D')
+    xlabel('X [m]')
+    ylabel('Y [m]')
 end
