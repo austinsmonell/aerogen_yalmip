@@ -8,6 +8,7 @@ y1 = x(4, :);
 psi1 = x(5, :);
 va1_xy = x(6, :);
 theta1 = x(7, :);
+theta1_dot = x(8, :);
 
 %Controls: dist1
 m_ctr = u(1, :);
@@ -57,15 +58,17 @@ D1 = q1*S.*Cd1;%done
 F1_zb = -sin(alpha1).*D1 - cos(alpha1).*L1;%done
 F1_xb = -cos(alpha1).*D1 + sin(alpha1).*L1;%done
 
+M1 = q1*d_c*S.*(CMa*alpha1+CMq*theta1_dot+CMde*de1);
+
 x1_dot = va1_xy.*cos(psi1);
 y1_dot = va1_xy.*sin(psi1);
 psi1_dot = dr1;
-theta1_dot = de1;
-va_dot = F1_xb/(m_ac+m_teth/3);
+theta1_dot_dot = M1/moi_ac_m;
+vxy_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
 
 F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 
 sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 %% package derivitives
-dx = [sigma_dot; sigma_dot_dot; x1_dot; y1_dot; psi1_dot; va_dot; theta1_dot];
+dx = [sigma_dot; sigma_dot_dot; x1_dot; y1_dot; psi1_dot; vxy_dot; theta1_dot; theta1_dot_dot];
 end
