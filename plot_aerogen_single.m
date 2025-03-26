@@ -1,5 +1,4 @@
 function  plot_aerogen_single(x,u,p,time)
-    dt = time(2)-time(1);
     %% Generator
     plot_rows = 5; plot_cols = 2;fig_val = 1;
     figure
@@ -46,8 +45,8 @@ function  plot_aerogen_single(x,u,p,time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time(1:end-1), u(2, :))
-    plot(time(1:end-1), u(3, :))
+    plot(time, u(2, :))
+    plot(time, u(3, :))
     title('Control')
     xlabel('Time [s]')
     legend('dr', 'ds')
@@ -74,20 +73,20 @@ function  plot_aerogen_single(x,u,p,time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time(1:end-1), u(4, :))
+    plot(time, u(4, :))
     title('Control [de]')
     xlabel('Time [s]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time(1:end-1), u(1, :))
+    plot(time, u(1, :))
     title('Gen Moment')
     xlabel('Time [s]')
     ylabel('Gen Moment [Nm]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time(1:end-1), (-u(1, :).*x(2, 1:end-1))/1000)
+    plot(time, (-u(1, :).*x(2, :))/1000)
     title('Objective')
     xlabel('Time [s]')
     ylabel('Power [kW]')
