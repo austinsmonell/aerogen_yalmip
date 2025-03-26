@@ -19,8 +19,8 @@ function  plot_aerogen_single(x,u,p,time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(3, :))
-    plot(time, x(4, :))
+    plot(time, x(6, :))
+    plot(time, x(7, :))
     title('Position')
     xlabel('Time [s]')
     ylabel('Position [m]')
@@ -29,7 +29,7 @@ function  plot_aerogen_single(x,u,p,time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(6, :))
+    plot(time, x(3, :))
     title('Speed')
     xlabel('Time [s]')
     ylabel('Va [mps]')
@@ -45,7 +45,7 @@ function  plot_aerogen_single(x,u,p,time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, u(2, :))
+    plot(time, u(4, :))
     plot(time, u(3, :))
     title('Control')
     xlabel('Time [s]')
@@ -55,15 +55,15 @@ function  plot_aerogen_single(x,u,p,time)
     sigma_dot = x(2, :);
     r_gen = p(1);
     vw = p(13);
-    theta1 = x(7, :);
-    va1_xy = x(6, :);
+    theta1 = x(4, :);
+    va1_xy = x(3, :);
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
     alpha1 = theta1+atan2(va1_r, va1_xy);%done
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(7, :)*180/pi)
+    plot(time, x(4, :)*180/pi)
     plot(time, alpha1*180/pi)
     title('Attitude')
     xlabel('Time [s]')
@@ -73,7 +73,7 @@ function  plot_aerogen_single(x,u,p,time)
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, u(4, :))
+    plot(time, u(2, :))
     title('Control [de]')
     xlabel('Time [s]')
     fig_val = fig_val+1;
@@ -96,7 +96,7 @@ function  plot_aerogen_single(x,u,p,time)
 
     %% 3D Plot
     figure
-    plot3(x(3, :), x(4, :), x(1, :)*p(1))
+    plot3(x(6, :), x(7, :), x(1, :)*p(1))
     axis equal 
     title('3D')
     xlabel('X [m]')

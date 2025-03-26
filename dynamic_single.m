@@ -3,18 +3,18 @@ function dx = dynamic_single(x, u, p)
 % States: theta, theta_dot
 sigma = x(1,:);
 sigma_dot = x(2,:);
-x1 = x(3, :);
-y1 = x(4, :);
+va1_xy = x(3, :);
+theta1 = x(4, :);
 psi1 = x(5, :);
-va1_xy = x(6, :);
-theta1 = x(7, :);
+x1 = x(6, :);
+y1 = x(7, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
 m_ctr = u(1, :);
-dr1 = u(2, :);
+de1 = u(2, :);
 ds1 = u(3, :);
-de1 = u(4, :);
+dr1 = u(4, :);
 
 % extract parameters
 r_gen = p(1);
@@ -71,5 +71,5 @@ F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 
 sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 %% package derivitives
-dx = [sigma_dot; sigma_dot_dot; x1_dot; y1_dot; psi1_dot; vxy_dot; theta1_dot];%; theta1_dot_dot];
+dx = [sigma_dot; sigma_dot_dot; vxy_dot; theta1_dot; psi1_dot; x1_dot; y1_dot];%; theta1_dot_dot];
 end
