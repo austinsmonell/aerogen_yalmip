@@ -15,8 +15,8 @@ timeVec = linspace(0, tf, gridSz);
 % Define variables/params
 nx = 7; 
 nu = 4; 
-x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:x1, 4:x1_dot, 5:theta1, 6:theta1_dot, 7:y1, 8:y1_dot, 9:psi1, 10:psi1_dot
-u = sdpvar(nu, gridSz);%1:de1, 2:m_ctr, 3:dr1, 4:ds1
+x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
+u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:ds1, 4:dr1(psi_Dot)
 p = getParams();
 
 %initial/final condition & limits
@@ -29,8 +29,6 @@ x0_lw = [0;   0;  1; -pi/4;   0;  0;    0];%; -inf];
 
 %% Contraints & Objective
 Constraints = [];
-%   intial/final conditions
-
 %   initial state limits
 Constraints = [Constraints, x(:, 1) >= x0_lw, x(:, 1) <= x0_up];
 

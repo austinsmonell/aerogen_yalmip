@@ -58,12 +58,12 @@ D1 = q1*S.*Cd1;%done
 F1_zb = -sin(alpha1).*D1 - cos(alpha1).*L1;%done
 F1_xb = -cos(alpha1).*D1 + sin(alpha1).*L1;%done
 
-% M1 = q1*d_c*S.*(CMa*alpha1+CMq*theta1_dot+CMde*de1);
+% M1 = q1*d_c*S.*(CMa*alpha1+CMq*theta1_dot+CMde*de1);%no theta dot for now
 
 x1_dot = va1_xy.*cos(psi1);
 y1_dot = va1_xy.*sin(psi1);
 psi1_dot = dr1;
-% theta1_dot_dot = M1/moi_ac_m;
+% theta1_dot_dot = M1/moi_ac_m; %no theta dot for now
 theta1_dot = de1;
 vxy_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
 
