@@ -1,4 +1,4 @@
-function p = getParamSingle()
+function p = getParams()
     %% System Parameters
     r_gen = 0.5;
     moi_g = 0.1;%1

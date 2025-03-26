@@ -3,6 +3,7 @@ clear
 close all
 
 yalmip('clear')
+addpath('..\')
 
 
 % Define horizon
@@ -16,7 +17,7 @@ nx = 7;
 nu = 4; 
 x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:x1, 4:x1_dot, 5:theta1, 6:theta1_dot, 7:y1, 8:y1_dot, 9:psi1, 10:psi1_dot
 u = sdpvar(nu, gridSz);%1:de1, 2:m_ctr, 3:dr1, 4:ds1
-p = getParamSingle();
+p = getParams();
 
 %initial/final condition & limits
 u_up = [0;  1; 0.1; 2*pi/tf+1e-6];
