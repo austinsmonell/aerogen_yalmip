@@ -4,29 +4,27 @@ function  plot_aerogen_twin(x,u,p,time)
 % States: theta, theta_dot
 sigma = x(1,:);
 sigma_dot = x(2,:);
-va1_xy = 50;
 theta1 = x(3, :);
-% psi1 = x(5, :);
-% x1 = x(6, :);
-% y1 = x(7, :);
-va2_xy = 50;
 theta2 = x(4, :);
-% psi2 = x(10, :);
-% x2 = x(11, :);
-% y2 = x(12, :);
-psi1 = 0;%x(7, :);
-psi2 = 0;%x(8, :);
+va1_xy = x(5, :);
+va2_xy = x(6, :);
+psi1 = x(7, :);
+psi2 = x(8, :);
+x1 = x(9, :);
+y1 = x(10, :);
+x2 = x(11, :);
+y2 = x(12, :);
 
 % theta1_dot = x(8, :);
 
 %Controls: dist1
 m_ctr = u(1, :);
 de1 = u(2, :);
-ds1 = 0;%u(3, :);
 de2 = u(3, :);
-ds2 = 0;%(5, :);
-% dr1 = u(6, :);
-% dr2 = u(7, :);
+dr1 = u(4, :);
+dr2 = u(5, :);
+ds1 = 0;
+ds2 = 0;
 
 
 % extract parameters
@@ -83,22 +81,22 @@ F1_xb = -cos(alpha1).*D1 + sin(alpha1).*L1;%done
 F2_zb = -sin(alpha2).*D2 - cos(alpha2).*L2;%done
 F2_xb = -cos(alpha2).*D2 + sin(alpha2).*L2;%done
 
-% x1_dot = va1_xy.*cos(psi1);
-% y1_dot = va1_xy.*sin(psi1);
-% psi1_dot = dr1;
-% x2_dot = va1_xy.*cos(psi2);
-% y2_dot = va1_xy.*sin(psi2);
-% psi2_dot = dr2;
+x1_dot = va1_xy.*cos(psi1);
+y1_dot = va1_xy.*sin(psi1);
+psi1_dot = dr1;
+x2_dot = va1_xy.*cos(psi2);
+y2_dot = va1_xy.*sin(psi2);
+psi2_dot = dr2;
 
 theta1_dot = de1;
 theta2_dot = de2;
-% va1_xy_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
-% va2_xy_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)-(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3);
+va1_xy_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
+va2_xy_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)-(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3);
 
 F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 F2_aero_r = F2_xb.*(-sin(theta2))+F2_zb.*(cos(theta2));%done
 
-sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+(m_ac+2*m_teth)*r_gen^2);
+sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_gen^2);
 
     %% Generator
     plot_rows = 6; plot_cols = 2;fig_val = 1;
@@ -118,44 +116,46 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+(m_ac+2*m_teth)*r_ge
     ylabel('Sigma dot [rev/s]')
     fig_val = fig_val+1;
 
-%     subplot(plot_rows, plot_cols, fig_val)
-%     hold on
-%     plot(time, x(6, :))
-%     plot(time, x(7, :))
-%     title('Position')
-%     xlabel('Time [s]')
-%     ylabel('Position [m]')
-%     legend('X', 'Y')
-%     fig_val = fig_val+1;
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, x(9, :))
+    plot(time, x(10, :))
+    plot(time, x(11, :))
+    plot(time, x(12, :))
+    title('Position')
+    xlabel('Time [s]')
+    ylabel('Position [m]')
+    legend('X1', 'Y1', 'X2', 'Y2')
+    fig_val = fig_val+1;
 
-%     subplot(plot_rows, plot_cols, fig_val)
-%     hold on
-%     plot(time, x(3, :))
-%     plot(time, x(5, :))
-%     title('Speed')
-%     xlabel('Time [s]')
-%     ylabel('Va [mps]')
-%     legend('vxy1', 'vxy2')
-%     fig_val = fig_val+1;
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, x(5, :))
+    plot(time, x(6, :))
+    title('Speed')
+    xlabel('Time [s]')
+    ylabel('Va [mps]')
+    legend('vxy1', 'vxy2')
+    fig_val = fig_val+1;
 
-%     subplot(plot_rows, plot_cols, fig_val)
-%     hold on
-%     plot(time, x(7, :)*180/pi)
-%     plot(time, x(8, :)*180/pi)
-%     title('Heading')
-%     xlabel('Time [s]')
-%     ylabel('Psi [deg]')
-%     legend('psi1', 'psi2')
-%     fig_val = fig_val+1;
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, x(7, :)*180/pi)
+    plot(time, x(8, :)*180/pi)
+    title('Heading')
+    xlabel('Time [s]')
+    ylabel('Psi [deg]')
+    legend('psi1', 'psi2')
+    fig_val = fig_val+1;
 
-%     subplot(plot_rows, plot_cols, fig_val)
-%     hold on
-%     plot(time, u(3, :))
-% %     plot(time, u(5, :))
-%     title('Ds')
-%     xlabel('Time [s]')
-% %     legend('ds1', 'ds2')
-%     fig_val = fig_val+1;
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, u(4, :))
+    plot(time, u(5, :))
+    title('Rudder')
+    xlabel('Time [s]')
+    legend('dr1', 'dr2')
+    fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
@@ -204,12 +204,15 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+(m_ac+2*m_teth)*r_ge
   
 
     %% 3D Plot
-%     figure
-%     plot3(x(6, :), x(7, :), x(1, :)*p(1))
-%     axis equal 
-%     title('3D')
-%     xlabel('X [m]')
-%     ylabel('Y [m]')
+    figure
+    hold on
+    plot3(x(9, :), x(10, :), x(1, :)*p(1))
+    plot3(x(11, :), x(12, :), -x(1, :)*p(1))
+    axis equal 
+    title('3D')
+    xlabel('X [m]')
+    ylabel('Y [m]')
+    legend('XYZ1','XYZ2')
 
 
 end
