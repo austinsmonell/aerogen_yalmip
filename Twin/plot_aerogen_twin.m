@@ -23,8 +23,8 @@ de1 = u(2, :);
 de2 = u(3, :);
 dr1 = u(4, :);
 dr2 = u(5, :);
-ds1 = 0;
-ds2 = 0;
+ds1 = 0;%u(6, :);
+ds2 = 0;%u(7, :);
 
 
 % extract parameters
@@ -200,6 +200,15 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     xlabel('Time [s]')
     legend('F1aero','F2aero')
     fig_val = fig_val+1;
+
+%     subplot(plot_rows, plot_cols, fig_val)
+%     hold on
+%     plot(time, u(6, :))
+%     plot(time, u(7, :))
+%     title('Speedbrake [ds]')
+%     xlabel('Time [s]')
+%     legend('ds1', 'ds2')
+%     fig_val = fig_val+1;
 
   
 

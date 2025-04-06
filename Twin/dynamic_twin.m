@@ -22,8 +22,8 @@ de1 = u(2, :);
 de2 = u(3, :);
 dr1 = u(4, :);
 dr2 = u(5, :);
-ds1 = 0;
-ds2 = 0;
+ds1 = 0;%u(6, :);
+ds2 = 0;%u(7, :);
 
 
 % extract parameters
@@ -83,8 +83,8 @@ F2_xb = -cos(alpha2).*D2 + sin(alpha2).*L2;%done
 x1_dot = va1_xy.*cos(psi1);
 y1_dot = va1_xy.*sin(psi1);
 psi1_dot = dr1;
-x2_dot = va1_xy.*cos(psi2);
-y2_dot = va1_xy.*sin(psi2);
+x2_dot = va2_xy.*cos(psi2);
+y2_dot = va2_xy.*sin(psi2);
 psi2_dot = dr2;
 
 theta1_dot = de1;
