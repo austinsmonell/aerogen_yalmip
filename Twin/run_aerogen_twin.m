@@ -5,7 +5,9 @@ close all
 yalmip('clear')
 addpath('..\')
 
-
+save_soln = 1;
+use_guess = 1;
+save_name = 'Solns/soln1';
 % Define horizon
 tf = 10;
 gridSz = 50;
@@ -18,14 +20,20 @@ nu = 5;
 x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
 u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
 p = getParams();
+if use_guess
+    load(strcat(save_name, '_states.mat'));
+    load(strcat(save_name, '_ctrs.mat'));
+    assign(x, states);
+    assign(u, ctrs);
+end
 
 %initial/final condition & limits
-u_up = [22000;  4; 4; 2*pi/(tf+dt)+1e-6; 2*pi/(tf+dt)+1e-6];%; 0; 0];%; 2*pi/dt+1e-6; 2*pi/dt+1e-6];
-u_lw = [-22000; -4; -4; -2*pi/(tf+dt)-1e-6; -2*pi/(tf+dt)-1e-6];%; 0; 0];%; -2*pi/dt-1e-6; -2*pi/dt-1e-6];
+u_up = [22000;  2; 2; 2*pi/(tf+dt)+1e-1; 2*pi/(tf+dt)+1e-1];%; 0; 0];%; 2*pi/dt+1e-6; 2*pi/dt+1e-6];
+u_lw = [-22000; -2; -2; -2*pi/(tf+dt)-1e-1; -2*pi/(tf+dt)-1e-1];%; 0; 0];%; -2*pi/dt-1e-6; -2*pi/dt-1e-6];
 x_up = [inf;  inf; pi/4; pi/4; 100; 100; inf; inf; inf; inf; inf; inf];
 x_lw = [-inf; -inf; -pi/4; -pi/4; 1; 1; -inf; -inf; -inf; -inf; -inf; -inf];
-x0_up = [0;   inf; pi/4; pi/4; 100; 100; 0; 0; 0; 0; 0; 0];
-x0_lw = [0;   -inf; -pi/4; -pi/4; 1; 1; 0; 0; 0; 0; 0; 0];
+x0_up = [0;   inf; pi/4; pi/4; 100; 100; pi; pi; 0; 0; 0; 0];
+x0_lw = [0;   -inf; -pi/4; -pi/4; 1; 1; -pi; -pi; 0; 0; 0; 0];
 
 %% Contraints & Objective
 Constraints = [];
@@ -58,26 +66,30 @@ Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw
 
 %dynamics and objective
 cyl_idx = [1, 2, 3, 4, 5, 6, 9, 10, 11, 12];
-Objective = u(1, 1).*x(2, 1);
+Objective = u(1, 1).*x(2, 1)+(u(4, 1)-2*pi/(tf+dt))*1000+(u(5, 1)+2*pi/(tf+dt))*1000;
 x_dotk = dynamic_twin(x(:, end), u(:, end), p);
 x_dotk1 = dynamic_twin(x(:, 1), u(:, 1), p);
 Constraints = [Constraints, x(cyl_idx, 1) == x(cyl_idx, end)+dt/2*(x_dotk(cyl_idx)+x_dotk1(cyl_idx)),...
                 x([7], 1)+2*pi == x([7], end)+dt/2*(x_dotk([7])+x_dotk1([7])),...
                 x([8], 1)-2*pi == x([8], end)+dt/2*(x_dotk([8])+x_dotk1([8]))];
-Constraints = [Constraints, abs(u(2, 1)-u(2, end)) <= 1.5*dt, abs(u(3, 1)-u(3, end)) <= 1.5*dt];
-Constraints = [Constraints, abs(u(4, 1)-u(4, end)) <= 1*dt, abs(u(5, 1)-u(5, end)) <= 1*dt];
+Constraints = [Constraints, abs(u(2, 1)-u(2, end)) <= 4*dt, abs(u(3, 1)-u(3, end)) <= 4*dt];
+% Constraints = [Constraints, abs(u(4, 1)-u(4, end)) <= 0.5*dt, abs(u(5, 1)-u(5, end)) <= 0.5*dt];
 
 for m = 1 : gridSz-1
   x_dotk = dynamic_twin(x(:, m), u(:, m), p);
   x_dotk1 = dynamic_twin(x(:, m+1), u(:, m+1), p);
   Constraints = [Constraints, x(:, m+1) == x(:, m)+dt/2*(x_dotk+x_dotk1)];%discrete time dynamics, equality cnst
-  Constraints = [Constraints, abs(u(2, m+1)-u(2, m)) <= 1.5*dt, abs(u(3, m+1)-u(3, m)) <= 1.5*dt];
-  Constraints = [Constraints, abs(u(4, m+1)-u(4, m)) <= 1*dt, abs(u(5, m+1)-u(5, m)) <= 1*dt];
-  Objective = Objective + u(1, m+1).*x(2, m+1); %objective func, max energy
+  Constraints = [Constraints, abs(u(2, m+1)-u(2, m)) <= 4*dt, abs(u(3, m+1)-u(3, m)) <= 4*dt];
+%   Constraints = [Constraints, abs(u(4, m+1)-u(4, m)) <= 0.5*dt, abs(u(5, m+1)-u(5, m)) <= 0.5*dt];
+  Objective = Objective + u(1, m+1).*x(2, m+1)+(u(4, m+1)-2*pi/(tf+dt))*1000+(u(5, m+1)+2*pi/(tf+dt))*1000; %objective func, max energy
 end
 
 % Set some options for YALMIP and solver
-options = sdpsettings('solver','ipopt');
+if use_guess
+    options = sdpsettings('solver','ipopt', 'usex0', 1);
+else
+    options = sdpsettings('solver','ipopt');
+end
 
 % Solve the problem
 sol = optimize(Constraints,Objective,options);
@@ -90,6 +102,10 @@ if sol.problem == 0
  plot_aerogen_twin(states,ctrs,p,timeVec)
  disp(-value(Objective)/gridSz*(tf/60/60))
 
+ if save_soln
+    save(strcat(save_name, '_states.mat'), 'states')
+    save(strcat(save_name, '_ctrs.mat'), 'ctrs')
+ end
 else
  disp('Hmm, something went wrong!');
  sol.info
