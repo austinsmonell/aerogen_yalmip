@@ -1,6 +1,6 @@
 function  plot_aerogen_single(x,u,p,time)
 
-    %% extract variables
+%% extract variables
 % States: theta, theta_dot
 sigma = x(1,:);
 sigma_dot = x(2,:);
@@ -12,10 +12,10 @@ y1 = x(7, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :);
+m_ctr = u(1, :)*20000;
 de1 = u(2, :);
-ds1 = u(3, :);
-dr1 = u(4, :);
+ds1 = u(3, :)*0.1;
+dr1 = u(4, :)*2*pi/(p(31)+p(32))+1e-6;
 
 % extract parameters
 r_gen = p(1);
@@ -117,8 +117,8 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, u(4, :))
-    plot(time, u(3, :))
+    plot(time, dr1)
+    plot(time, ds1)
     title('Control')
     xlabel('Time [s]')
     legend('dr', 'ds')
@@ -142,14 +142,14 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, u(1, :))
+    plot(time, m_ctr)
     title('Gen Moment')
     xlabel('Time [s]')
     ylabel('Gen Moment [Nm]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, (-u(1, :).*x(2, :))/1000)
+    plot(time, (-m_ctr.*x(2, :))/1000)
     title('Objective')
     xlabel('Time [s]')
     ylabel('Power [kW]')
@@ -162,7 +162,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     ylabel('Aero Force[N]')
     fig_val = fig_val+1;
 
-  
+    display(mean(-m_ctr.*x(2, :)/1000))
 
     %% 3D Plot
     figure
