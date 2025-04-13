@@ -18,13 +18,13 @@ y2 = x(12, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :);
+m_ctr = u(1, :)*22000;
 de1 = u(2, :);
 de2 = u(3, :);
-dr1 = u(4, :);
-dr2 = u(5, :);
-ds1 = 0;%u(6, :);
-ds2 = 0;%u(7, :);
+dr1 = u(4, :)*(4*pi/(10.1695));
+dr2 = u(5, :)*(4*pi/(10.1695));
+ds1 = 0;
+ds2 = 0;
 
 
 % extract parameters
@@ -84,8 +84,8 @@ F2_xb = -cos(alpha2).*D2 + sin(alpha2).*L2;%done
 x1_dot = va1_xy.*cos(psi1);
 y1_dot = va1_xy.*sin(psi1);
 psi1_dot = dr1;
-x2_dot = va1_xy.*cos(psi2);
-y2_dot = va1_xy.*sin(psi2);
+x2_dot = va2_xy.*cos(psi2);
+y2_dot = va2_xy.*sin(psi2);
 psi2_dot = dr2;
 
 theta1_dot = de1;
@@ -150,8 +150,8 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, u(4, :))
-    plot(time, u(5, :))
+    plot(time, dr1)
+    plot(time, dr2)
     title('Rudder')
     xlabel('Time [s]')
     legend('dr1', 'dr2')
@@ -171,22 +171,22 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, u(2, :))
-    plot(time, u(3, :))
+    plot(time, de1)
+    plot(time, de2)
     title('Control [de]')
     xlabel('Time [s]')
     legend('de1', 'de2')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, u(1, :))
+    plot(time, m_ctr)
     title('Gen Moment')
     xlabel('Time [s]')
     ylabel('Gen Moment [Nm]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, (-u(1, :).*x(2, :))/1000)
+    plot(time, (-m_ctr.*x(2, :))/1000)
     title('Objective')
     xlabel('Time [s]')
     ylabel('Power [kW]')
@@ -201,16 +201,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     legend('F1aero','F2aero')
     fig_val = fig_val+1;
 
-%     subplot(plot_rows, plot_cols, fig_val)
-%     hold on
-%     plot(time, u(6, :))
-%     plot(time, u(7, :))
-%     title('Speedbrake [ds]')
-%     xlabel('Time [s]')
-%     legend('ds1', 'ds2')
-%     fig_val = fig_val+1;
-
-  
+    display(mean(-m_ctr.*x(2, :)/1000))
 
     %% 3D Plot
     figure

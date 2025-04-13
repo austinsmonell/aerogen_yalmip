@@ -17,13 +17,13 @@ y2 = x(12, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :);
+m_ctr = u(1, :)*22000;
 de1 = u(2, :);
 de2 = u(3, :);
-dr1 = u(4, :);
-dr2 = u(5, :);
-ds1 = 0;%u(6, :);
-ds2 = 0;%u(7, :);
+dr1 = u(4, :)*(4*pi/(10.1695));
+dr2 = u(5, :)*(4*pi/(10.1695));
+ds1 = 0;
+ds2 = 0;
 
 
 % extract parameters
