@@ -19,7 +19,7 @@ nx = 12;
 nu = 5;
 x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
 u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
-p = getParams();
+p = getParams(); p(31) = tf; p(32) = dt;
 if use_guess
     load(strcat(save_name, '_states.mat'));
     load(strcat(save_name, '_ctrs.mat'));

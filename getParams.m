@@ -30,6 +30,8 @@ function p = getParams()
     alpha_min = 0.0;
     CDds = 1.0;
     omega = 0.0;%0
+    tf = 0;
+    dt = 0;
 
-    p = [r_gen; moi_g; c; k_line; d; m_ac; rho; S; CL0; CLa; CD0; e; vw; moi_ac_m; d_c; CMa; CMq; CMde; CNb; CNr; CNdr; CYb; moi_ac_n; CDb; g; m_teth; CD_eff_teth; alpha_min; CDds; omega];
+    p = [r_gen; moi_g; c; k_line; d; m_ac; rho; S; CL0; CLa; CD0; e; vw; moi_ac_m; d_c; CMa; CMq; CMde; CNb; CNr; CNdr; CYb; moi_ac_n; CDb; g; m_teth; CD_eff_teth; alpha_min; CDds; omega; tf; dt];
 end
