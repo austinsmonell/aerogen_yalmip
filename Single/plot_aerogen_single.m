@@ -14,8 +14,8 @@ y1 = x(7, :);
 %Controls: dist1
 m_ctr = u(1, :)*20000;
 de1 = u(2, :);
-ds1 = u(3, :)*0.1;
-dr1 = u(4, :)*2*pi/(p(31)+p(32))+1e-6;
+ds1 = 0;
+dr1 = u(3, :)*4*pi/(p(31)+p(32));
 
 % extract parameters
 r_gen = p(1);
@@ -118,10 +118,8 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     subplot(plot_rows, plot_cols, fig_val)
     hold on
     plot(time, dr1)
-    plot(time, ds1)
-    title('Control')
+    title('Dr')
     xlabel('Time [s]')
-    legend('dr', 'ds')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)

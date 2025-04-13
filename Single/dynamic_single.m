@@ -13,8 +13,8 @@ y1 = x(7, :);
 %Controls: dist1
 m_ctr = u(1, :)*20000;
 de1 = u(2, :);
-ds1 = u(3, :)*0.1;
-dr1 = u(4, :)*2*pi/(p(31)+p(32))+1e-6;
+ds1 = 0;
+dr1 = u(3, :)*4*pi/(p(31)+p(32));
 
 % extract parameters
 r_gen = p(1);
