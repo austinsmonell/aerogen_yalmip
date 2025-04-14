@@ -1,4 +1,13 @@
-function [Constraints,Objective] = getConstObj(gridSz, dt, nx, nu, x, u, p, x0_lw, x0_up, x_lw, x_up, u_up, u_lw, alpha_lim, cyl_idx, ctr_obj_gain)
+function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u)
+    %initial/final condition & limits
+    u_up = [0; 1; 1];
+    u_lw = [-1; -1; -1];
+    x_up = [inf;  inf; 100; pi/4; inf; inf; inf];
+    x_lw = [-inf; -inf; 1; -pi/4; -inf; -inf; -inf];
+    x0_up = [0; inf; 100; pi/4; pi; 0; 0];
+    x0_lw = [0; 0; 1; -pi/4; -pi;  0; 0];
+    cyl_idx = [2, 3, 4, 6, 7];
+
     %% Contraints & Objective
     Constraints = [];
     %   initial state limits
