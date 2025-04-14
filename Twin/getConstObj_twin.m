@@ -1,4 +1,4 @@
-function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u)
+function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, alpha_up, ctr_obj_gain, nx, nu, x, u);
     %initial/final condition & limits
     u_up = [1;  1; 1; 1; 1];%; 0; 0];%; 2*pi/dt+1e-6; 2*pi/dt+1e-6];
     u_lw = [-1; -1; -1; -1; -1];%; 0; 0];%; -2*pi/dt-1e-6; -2*pi/dt-1e-6];
@@ -30,8 +30,8 @@ function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_lim, ct
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
     va2_r = r1_dot+vw;
-    Constraints = [Constraints, va1_r./va1_xy <= tan(alpha_lim-theta1), va1_r./va1_xy >= tan(-alpha_lim-theta1),...
-                   va2_r./va2_xy <= tan(alpha_lim-theta2), va2_r./va2_xy >= tan(-alpha_lim-theta2)];
+    Constraints = [Constraints, va1_r./va1_xy <= tan(alpha_up-theta1), va1_r./va1_xy >= tan(alpha_low-theta1),...
+                   va2_r./va2_xy <= tan(alpha_up-theta2), va2_r./va2_xy >= tan(alpha_low-theta2)];
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];

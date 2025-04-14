@@ -15,8 +15,8 @@ dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 alpha_lim = 18*pi/180;
-wind_spd = 12;
-p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd;
+alpha_low = -2*pi/180;
+p = getParams(); p(31) = tf; p(32) = dt;
 
 %% Define variables/params
 nx = 12; 
@@ -34,7 +34,7 @@ for i = 1:length(wind_spd_vec)
         p(13) = wind_spd_vec(i);
         p(6) = m_ac_vec(j);
         %% Contraints & Objective
-        [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u);
+        [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, alpha_up, ctr_obj_gain, nx, nu, x, u);
         
         %% Set some options for YALMIP and solver
         if use_guess

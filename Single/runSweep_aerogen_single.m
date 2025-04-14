@@ -16,8 +16,7 @@ dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 alpha_lim = 18*pi/180;
-wind_spd = 12;
-p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd;
+p = getParams(); p(31) = tf; p(32) = dt;
 
 %% Define variables/params
 nx = 7; 

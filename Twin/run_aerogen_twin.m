@@ -6,15 +6,16 @@ yalmip('clear')
 addpath('..\')
 
 save_soln = 1;
-use_guess = 1;
+use_guess = 0;
 save_name = 'Solns/soln1';
 % Define horizon
 tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 0.1;
-alpha_lim = 18*pi/180;
+ctr_obj_gain = 10;
+alpha_up = 18*pi/180;
+alpha_low = -2*pi/180;
 wind_spd = 12;
 m_ac = 100;
 p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd; p(6) = m_ac;
@@ -26,7 +27,7 @@ x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:
 u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
 
 %% Contraints & Objective
-[Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u);
+[Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, alpha_up, ctr_obj_gain, nx, nu, x, u);
 
 %% Set some options for YALMIP and solver
 if use_guess
