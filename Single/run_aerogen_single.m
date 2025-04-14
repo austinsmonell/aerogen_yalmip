@@ -5,18 +5,19 @@ close all
 yalmip('clear')
 addpath('..\')
 
-save_soln = 0;
-use_guess = 0;
+save_soln = 1;
+use_guess = 1;
 save_name = 'Solns/soln1';
 % Define horizon
 tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 10;
-alpha_lim = 30*pi/180;
+ctr_obj_gain = 0.01;
+alpha_lim = 18*pi/180;
 wind_spd = 12;
-p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd;
+m_ac = 100;
+p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd; p(6) = m_ac;
 
 %% Define variables/params
 nx = 7; 
