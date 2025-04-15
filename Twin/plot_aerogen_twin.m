@@ -201,17 +201,19 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     legend('F1aero','F2aero')
     fig_val = fig_val+1;
 
+    sgtitle(strcat('Twin:', string(vw), 'mps-', string(m_ac), 'kg'))
     display(mean(-m_ctr.*x(2, :)/1000))
 
     %% 3D Plot
     figure
-    hold on
+    hold on;
     plot3(x(9, :), x(10, :), x(1, :)*p(1))
     plot3(x(11, :), x(12, :), -x(1, :)*p(1))
     axis equal 
-    title('3D')
+    title(strcat('Twin:', string(vw), 'mps-', string(m_ac), 'kg'))
     xlabel('X [m]')
     ylabel('Y [m]')
+    zlabel('Z [m]')
     legend('XYZ1','XYZ2')
 
 

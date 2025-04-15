@@ -160,15 +160,17 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     ylabel('Aero Force[N]')
     fig_val = fig_val+1;
 
+    sgtitle(strcat('Single:', string(vw), 'mps-', string(m_ac), 'kg'))
     display(mean(-m_ctr.*x(2, :)/1000))
 
     %% 3D Plot
     figure
     plot3(x(6, :), x(7, :), x(1, :)*p(1))
     axis equal 
-    title('3D')
+    title(strcat('Single:', string(vw), 'mps-', string(m_ac), 'kg'))
     xlabel('X [m]')
     ylabel('Y [m]')
+    zlabel('Z [m]')
 
 
 end
