@@ -5,35 +5,37 @@ close all
 yalmip('clear')
 addpath('..\')
 
-save_soln = 0;
-use_guess = 0;
-save_name = 'Solns/soln1';
-load_name = 'Solns/soln1';
-results_name = 'Results/res1';
+save_soln = 1;
+use_guess = 1;
+save_path = '../../aerogen_yalmip_results/Single/res1/';
+load_name = 'Solns/soln_0kg_12mps';
+results_name = 'Results/res1_0to500kg_12to2mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 10;
+ctr_obj_gain = 1;
 alpha_lim = 18*pi/180;
 p = getParams(); p(31) = tf; p(32) = dt;
 
 %% Define variables/params
 nx = 7; 
 nu = 3; 
-x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
-u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
 
 pwr_figure = figure;
-wind_spd_vec = 12:-4:8;
+wind_spd_vec = 12:-2:2;
 m_ac_vec = 0:50:500;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
 for i = 1:length(m_ac_vec)
-    use_guess = 1;
-    save_soln = 1;
+    if i > 1
+        load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
+    end
     for j = 1:length(wind_spd_vec)
+        yalmip('clear')
+        x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
+        u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
         p(13) = wind_spd_vec(j);
         p(6) = m_ac_vec(i);
         %% Contraints & Objective
@@ -58,7 +60,7 @@ for i = 1:length(m_ac_vec)
             % Extract and display value
             states = value(x);
             ctrs = value(u);
-            plot_aerogen_single(states,ctrs,p,timeVec);
+%             plot_aerogen_single(states,ctrs,p,timeVec);
 
             pwr_mesh(j, i) = mean(-u(1, :).*20000.*x(2, :)/1000);
             close(pwr_figure);
@@ -71,6 +73,7 @@ for i = 1:length(m_ac_vec)
             drawnow;
 
             if save_soln
+                save_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
                 save(strcat(save_name, '_states.mat'), 'states')
                 save(strcat(save_name, '_ctrs.mat'), 'ctrs')
             end
@@ -79,8 +82,6 @@ for i = 1:length(m_ac_vec)
             sol.info
             yalmiperror(sol.problem)
         end
-        use_guess = 1;
-        save_soln = 0;
     end
 end
 results.m_ac_mesh = m_ac_mesh;
