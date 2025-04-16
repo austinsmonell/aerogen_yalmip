@@ -3,12 +3,12 @@ function dx = dynamic_single(x, u, p)
 % States: theta, theta_dot
 sigma = x(1,:);
 sigma_dot = x(2,:);
-va1_xy = x(3, :);
+va1_u = x(3, :);
 theta1 = x(4, :);
 psi1 = x(5, :);
 x1 = x(6, :);
 y1 = x(7, :);
-% theta1_dot = x(8, :);
+va1_v = x(8, :);
 
 %Controls: dist1
 m_ctr = u(1, :)*20000;
@@ -48,28 +48,30 @@ omega = p(30);
 %% dynamics
 r1_dot = sigma_dot*r_gen;%done
 va1_r = -r1_dot+vw;%done
-alpha1 = theta1+atan2(va1_r, va1_xy);%done
+alpha1 = theta1+va1_r./va1_u;%done
+beta1 = va1_v./va1_u;
 
-q1 = 0.5*rho*(va1_r.^2+va1_xy.^2);%done
+q1 = 0.5*rho*(va1_r.^2+va1_u.^2+va1_v.^2);%done
 Cl1 = (CL0+CLa*alpha1);%done
 L1 = q1*S.*Cl1;%done
 Cd1 = (CD0+CD_eff_teth+e*Cl1.^2+CDds*ds1);
 D1 = q1*S.*Cd1;%done
 F1_zb = -sin(alpha1).*D1 - cos(alpha1).*L1;%done
 F1_xb = -cos(alpha1).*D1 + sin(alpha1).*L1;%done
+F1_yb = q1*S.*(CYb*beta1);
 
 % M1 = q1*d_c*S.*(CMa*alpha1+CMq*theta1_dot+CMde*de1);%no theta dot for now
 
-x1_dot = va1_xy.*cos(psi1);
-y1_dot = va1_xy.*sin(psi1);
+x1_dot = va1_u.*cos(psi1)+va1_v.*sin(psi1);
+y1_dot = va1_u.*sin(psi1)-va1_v.*cos(psi1);
 psi1_dot = dr1;
 % theta1_dot_dot = M1/moi_ac_m; %no theta dot for now
 theta1_dot = de1;
-vxy_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
-
+va1_u_dot = (F1_xb.*cos(theta1)+F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
+va1_v_dot = (-F1_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi1))/(m_ac+m_teth/3);
 F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 
 sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 %% package derivitives
-dx = [sigma_dot; sigma_dot_dot; vxy_dot; theta1_dot; psi1_dot; x1_dot; y1_dot];%; theta1_dot_dot];
+dx = [sigma_dot; sigma_dot_dot; va1_u_dot; theta1_dot; psi1_dot; x1_dot; y1_dot; va1_v_dot];
 end

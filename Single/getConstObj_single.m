@@ -2,11 +2,11 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, 
     %initial/final condition & limits
     u_up = [0; 1; 1];
     u_lw = [-1; -1; -1];
-    x_up = [inf;  inf; 100; pi/4; inf; inf; inf];
-    x_lw = [-inf; -inf; 1; -pi/4; -inf; -inf; -inf];
-    x0_up = [0; inf; 100; pi/4; pi; 0; 0];
-    x0_lw = [0; 0; 1; -pi/4; -pi;  0; 0];
-    cyl_idx = [2, 3, 4, 6, 7];
+    x_up = [inf;  inf; 100; pi/4; inf; inf; inf; inf];
+    x_lw = [-inf; -inf; 1; -pi/4; -inf; -inf; -inf; -inf];
+    x0_up = [0; inf; 100; pi/4; pi; 0; 0; 10];
+    x0_lw = [0; 0; 1; -pi/4; -pi;  0; 0; -10];
+    cyl_idx = [2, 3, 4, 6, 7, 8];
 
     %% Contraints & Objective
     Constraints = [];
@@ -23,11 +23,11 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, 
     r_gen = p(1);
     vw = p(13);
     theta1 = x(4, :);
-    va1_xy = x(3, :);
+    va1_u = x(3, :);
     
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
-    Constraints = [Constraints, va1_r./va1_xy <= tan(alpha_lim-theta1), va1_r./va1_xy >= tan(-alpha_lim-theta1)];
+    Constraints = [Constraints, va1_r./va1_u <= tan(alpha_lim-theta1), va1_r./va1_u >= tan(-alpha_lim-theta1)];
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];

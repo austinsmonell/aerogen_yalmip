@@ -20,9 +20,9 @@ m_ac = 0;
 p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd; p(6) = m_ac;
 
 %% Define variables/params
-nx = 7; 
+nx = 8; 
 nu = 3; 
-x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
+x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va1_u, 4: theta, 5:psi, 6:x1, 7:x2, 8:va1_v
 u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
     
 %% Contraints & Objective
