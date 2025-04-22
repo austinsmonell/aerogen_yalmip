@@ -6,14 +6,17 @@ sigma = x(1,:);
 sigma_dot = x(2,:);
 theta1 = x(3, :);
 theta2 = x(4, :);
-va1_xy = x(5, :);
-va2_xy = x(6, :);
+va1_u = x(5, :);
+va2_u = x(6, :);
 psi1 = x(7, :);
 psi2 = x(8, :);
 x1 = x(9, :);
 y1 = x(10, :);
 x2 = x(11, :);
 y2 = x(12, :);
+va1_v = x(13, :);
+va2_v = x(14, :);
+
 
 % theta1_dot = x(8, :);
 
@@ -60,11 +63,13 @@ omega = p(30);
 r1_dot = sigma_dot*r_gen;%done
 va1_r = -r1_dot+vw;%done
 va2_r = r1_dot+vw;%done
-alpha1 = theta1+atan2(va1_r, va1_xy);%done
-alpha2 = theta2+atan2(va2_r, va2_xy);%done
+alpha1 = theta1+va1_r./va1_u;%done
+alpha2 = theta2+va2_r./va2_u;%done
+beta1 = va1_v./va1_u;
+beta2 = va2_v./va2_u;
 
-q1 = 0.5*rho*(va1_r.^2+va1_xy.^2);%done
-q2 = 0.5*rho*(va2_r.^2+va2_xy.^2);%done
+q1 = 0.5*rho*(va1_r.^2+va1_u.^2+va1_v.^2);%done
+q2 = 0.5*rho*(va2_r.^2+va2_u.^2+va2_v.^2);%done
 
 Cl1 = (CL0+CLa*alpha1);%done
 L1 = q1*S.*Cl1;%done
@@ -80,18 +85,22 @@ F1_zb = -sin(alpha1).*D1 - cos(alpha1).*L1;%done
 F1_xb = -cos(alpha1).*D1 + sin(alpha1).*L1;%done
 F2_zb = -sin(alpha2).*D2 - cos(alpha2).*L2;%done
 F2_xb = -cos(alpha2).*D2 + sin(alpha2).*L2;%done
+F1_yb = q1*S.*(CYb*beta1);
+F2_yb = q2*S.*(CYb*beta2);
 
-x1_dot = va1_xy.*cos(psi1);
-y1_dot = va1_xy.*sin(psi1);
+x1_dot = va1_u.*cos(psi1)+va1_v.*sin(psi1);
+y1_dot = va1_u.*sin(psi1)-va1_v.*cos(psi1);
 psi1_dot = dr1;
-x2_dot = va2_xy.*cos(psi2);
-y2_dot = va2_xy.*sin(psi2);
+x2_dot = va2_u.*cos(psi2)+va2_v.*sin(psi2);
+y2_dot = va2_u.*sin(psi2)-va2_v.*cos(psi2);
 psi2_dot = dr2;
 
 theta1_dot = de1;
 theta2_dot = de2;
-va1_xy_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
-va2_xy_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)-(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3);
+va1_u_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
+va2_u_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)-(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3);
+va1_v_dot = (-F1_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi1))/(m_ac+m_teth/3);
+va2_v_dot = (-F2_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi2))/(m_ac+m_teth/3);
 
 F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 F2_aero_r = F2_xb.*(-sin(theta2))+F2_zb.*(cos(theta2));%done
@@ -103,14 +112,14 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     figure
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, x(1, :)/(2*pi))
+    plot(time, sigma/(2*pi))
     title('Sigma')
     xlabel('Time [s]')
     ylabel('Sigma [revs]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, x(2, :)/(2*pi))
+    plot(time, sigma_dot/(2*pi))
     title('Sigma dot')
     xlabel('Time [s]')
     ylabel('Sigma dot [rev/s]')
@@ -118,10 +127,10 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(9, :))
-    plot(time, x(10, :))
-    plot(time, x(11, :))
-    plot(time, x(12, :))
+    plot(time, x1)
+    plot(time, y1)
+    plot(time, x2)
+    plot(time, y2)
     title('Position')
     xlabel('Time [s]')
     ylabel('Position [m]')
@@ -130,18 +139,18 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(5, :))
-    plot(time, x(6, :))
+    plot(time, va1_u)
+    plot(time, va2_u)
     title('Speed')
     xlabel('Time [s]')
-    ylabel('Va [mps]')
-    legend('vxy1', 'vxy2')
+    ylabel('U [mps]')
+    legend('U1', 'U2')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(7, :)*180/pi)
-    plot(time, x(8, :)*180/pi)
+    plot(time, psi1*180/pi)
+    plot(time, psi2*180/pi)
     title('Heading')
     xlabel('Time [s]')
     ylabel('Psi [deg]')
@@ -159,13 +168,13 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, x(3, :)*180/pi)
+    plot(time, theta1*180/pi)
     plot(time, alpha1*180/pi)
-    plot(time, x(4, :)*180/pi)
+    plot(time, theta2*180/pi)
     plot(time, alpha2*180/pi)
     title('Attitude')
     xlabel('Time [s]')
-    ylabel('Pitch [deg]')
+    ylabel('Attitude [deg]')
     legend('pitch1', 'alpha1', 'pitch2', 'alpha2')
     fig_val = fig_val+1;
 
@@ -186,7 +195,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, (-m_ctr.*x(2, :))/1000)
+    plot(time, (-m_ctr.*sigma_dot)/1000)
     title('Objective')
     xlabel('Time [s]')
     ylabel('Power [kW]')
@@ -199,6 +208,16 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     title('Aero Force')
     xlabel('Time [s]')
     legend('F1aero','F2aero')
+    fig_val = fig_val+1;
+
+    subplot(plot_rows, plot_cols, fig_val)
+    hold on
+    plot(time, beta1*180/pi)
+    plot(time, beta2*180/pi)
+    title('Side Slip')
+    xlabel('Time [s]')
+    ylabel('beta [deg]')
+    legend('beta1', 'beta2')
     fig_val = fig_val+1;
 
     sgtitle(strcat('Twin:', string(vw), 'mps-', string(m_ac), 'kg'))

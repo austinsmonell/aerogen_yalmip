@@ -7,26 +7,27 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res2';
+results_run = 'res5';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
 load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
+max_time = 400;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 1;
+ctr_obj_gain = 10;
 alpha_up = 18*pi/180;
-alpha_low = -2*pi/180;
+alpha_low = -18*pi/180;
 p = getParams(); p(31) = tf; p(32) = dt;
 
 %% Define variables/params
-nx = 12; 
+nx = 14; 
 nu = 5;
 
 pwr_figure = figure;
 wind_spd_vec = 12:-2:2;
-m_ac_vec = 0:200:1000;
+m_ac_vec = 0:50:500;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
 for i = 1:length(m_ac_vec)
@@ -34,6 +35,9 @@ for i = 1:length(m_ac_vec)
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
     end
     for j = 1:length(wind_spd_vec)
+        if j > 1
+            load_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j-1)), 'mps');
+        end
         yalmip('clear')
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
         u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
@@ -49,9 +53,9 @@ for i = 1:length(m_ac_vec)
             load(strcat(load_name, '_ctrs.mat'));
             assign(x, states);
             assign(u, ctrs);
-            options = sdpsettings('solver','ipopt', 'usex0', 1);
+            options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time);
         else
-            options = sdpsettings('solver','ipopt');
+            options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time);
         end
         
         %% Solve the problem
@@ -83,6 +87,7 @@ for i = 1:length(m_ac_vec)
             disp('Hmm, something went wrong!');
             sol.info
             yalmiperror(sol.problem)
+            break;
         end
     end
 end

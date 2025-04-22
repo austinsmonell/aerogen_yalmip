@@ -11,6 +11,7 @@ save_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
+max_time = 400;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
@@ -21,9 +22,9 @@ m_ac = 0;
 p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd; p(6) = m_ac;
 
 %% Define variables/params
-nx = 12; 
+nx = 14; 
 nu = 5;
-x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
+x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1_u, 6:va2_u, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2, 13:va1_v, 14:va2_v
 u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
 
 %% Contraints & Objective
@@ -35,9 +36,9 @@ if use_guess
     load(strcat(save_name, '_ctrs.mat'));
     assign(x, states);
     assign(u, ctrs);
-    options = sdpsettings('solver','ipopt', 'usex0', 1);
+    options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time);
 else
-    options = sdpsettings('solver','ipopt');
+    options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time);
 end
 
 %% Solve the problem

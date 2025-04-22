@@ -2,11 +2,11 @@ function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, al
     %initial/final condition & limits
     u_up = [1;  1; 1; 1; 1];%; 0; 0];%; 2*pi/dt+1e-6; 2*pi/dt+1e-6];
     u_lw = [-1; -1; -1; -1; -1];%; 0; 0];%; -2*pi/dt-1e-6; -2*pi/dt-1e-6];
-    x_up = [inf; inf; pi/4; pi/4; 200; 200; inf; inf; inf; inf; inf; inf];
-    x_lw = [-inf; -inf; -pi/4; -pi/4; 1; 1; -inf; -inf; -inf; -inf; -inf; -inf];
-    x0_up = [0; inf; pi/4; pi/4; 200; 200; pi; pi; 0; 0; 0; 0];
-    x0_lw = [0; -inf; -pi/4; -pi/4; 1; 1; -pi; -pi; 0; 0; 0; 0];
-    cyl_idx = [1, 2, 3, 4, 5, 6, 9, 10, 11, 12];
+    x_up = [inf; inf; pi/2; pi/2; 200; 200; inf; inf; inf; inf; inf; inf; inf; inf];
+    x_lw = [-inf; -inf; -pi/2; -pi/2; 1; 1; -inf; -inf; -inf; -inf; -inf; -inf; -inf; -inf];
+    x0_up = [0; inf; pi/2; pi/2; 200; 200; pi; pi; 0; 0; 0; 0; inf; inf];
+    x0_lw = [0; -inf; -pi/2; -pi/2; 1; 1; -pi; -pi; 0; 0; 0; 0; -inf; -inf];
+    cyl_idx = [1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14];
 
     %% Contraints & Objective
     Constraints = [];
@@ -23,15 +23,19 @@ function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, al
     r_gen = p(1);
     vw = p(13);
     theta1 = x(3, :);
-    va1_xy = x(5, :);
+    va1_u = x(5, :);
     theta2 = x(4, :);
-    va2_xy = x(6, :);
+    va2_u = x(6, :);
+    va1_v = x(13, :);
+    va2_v = x(14, :);
     
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
     va2_r = r1_dot+vw;
-    Constraints = [Constraints, va1_r./va1_xy <= tan(alpha_up-theta1), va1_r./va1_xy >= tan(alpha_low-theta1),...
-                   va2_r./va2_xy <= tan(alpha_up-theta2), va2_r./va2_xy >= tan(alpha_low-theta2)];
+    Constraints = [Constraints, va1_r./va1_u <= (alpha_up-theta1), va1_r./va1_u >= (alpha_low-theta1),...
+                   va2_r./va2_u <= (alpha_up-theta2), va2_r./va2_u >= (alpha_low-theta2),...
+                   va1_v./va1_u <= 10*pi/180, va1_v./va1_u >= -10*pi/180,...
+                   va2_v./va2_u <= 10*pi/180, va2_v./va2_u >= -10*pi/180];
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];

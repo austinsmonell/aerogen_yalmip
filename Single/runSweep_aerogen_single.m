@@ -7,7 +7,7 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res3';
+results_run = 'res4';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
 load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
@@ -33,6 +33,9 @@ for i = 1:length(m_ac_vec)
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
     end
     for j = 1:length(wind_spd_vec)
+        if j > 1
+            load_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j-1)), 'mps');
+        end
         yalmip('clear')
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
         u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
