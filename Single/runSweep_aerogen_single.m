@@ -7,13 +7,13 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res5';
+results_run = 'res6';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
 load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 200;
+max_time = 400;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;

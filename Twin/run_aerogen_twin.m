@@ -6,7 +6,7 @@ yalmip('clear')
 addpath('..\')
 
 save_soln = 1;
-use_guess = 0;
+use_guess = 1;
 save_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;

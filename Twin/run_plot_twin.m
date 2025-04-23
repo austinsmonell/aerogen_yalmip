@@ -8,7 +8,7 @@ plot_set = 0;
 
 wind_spd = 12;
 m_ac = 1000;
-result_set = 'res6';
+result_set = 'res7';
 
 if plot_states
     
