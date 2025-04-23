@@ -119,7 +119,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, dr1)
+    plot(time, dr1*180/pi)
     title('Dr')
     xlabel('Time [s]')
     fig_val = fig_val+1;
@@ -136,7 +136,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, de1)
+    plot(time, de1*180/pi)
     title('Control [de]')
     xlabel('Time [s]')
     fig_val = fig_val+1;

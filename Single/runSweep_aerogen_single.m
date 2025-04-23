@@ -7,15 +7,16 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res4';
+results_run = 'res5';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
 load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
+max_time = 200;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 1;
+ctr_obj_gain = 10;
 alpha_lim = 18*pi/180;
 p = getParams(); p(31) = tf; p(32) = dt;
 
@@ -25,7 +26,8 @@ nu = 3;
 
 pwr_figure = figure;
 wind_spd_vec = 12:-2:2;
-m_ac_vec = 0:50:500;
+m_ac_vec = 0:200:2000;
+soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
 for i = 1:length(m_ac_vec)
@@ -46,20 +48,23 @@ for i = 1:length(m_ac_vec)
         
         %% Set some options for YALMIP and solver
         if use_guess
+            if isempty(dir(fullfile(strcat(load_name, '_states.mat'))))
+                break;
+            end
             load(strcat(load_name, '_states.mat'));
             load(strcat(load_name, '_ctrs.mat'));
             assign(x, states);
             assign(u, ctrs);
-            options = sdpsettings('solver','ipopt', 'usex0', 1);
+            options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time);
         else
-            options = sdpsettings('solver','ipopt');
+            options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time);
         end
         
         %% Solve the problem
         sol = optimize(Constraints,Objective,options);
-        
+        soln_fail = sol.problem;
         %% Analyze error flags
-        if sol.problem == 0
+        if soln_fail == 0
             % Extract and display value
             states = value(x);
             ctrs = value(u);

@@ -21,7 +21,7 @@ va2_v = x(14, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :)*22000;
+m_ctr = u(1, :)*50000;
 de1 = u(2, :);
 de2 = u(3, :);
 dr1 = u(4, :)*(4*pi/(p(31)+p(32)));
@@ -159,8 +159,8 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, dr1)
-    plot(time, dr2)
+    plot(time, dr1*180/pi)
+    plot(time, dr2*180/pi)
     title('Rudder')
     xlabel('Time [s]')
     legend('dr1', 'dr2')
@@ -180,8 +180,8 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, de1)
-    plot(time, de2)
+    plot(time, de1*180/pi)
+    plot(time, de2*180/pi)
     title('Control [de]')
     xlabel('Time [s]')
     legend('de1', 'de2')

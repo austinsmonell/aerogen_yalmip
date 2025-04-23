@@ -3,12 +3,12 @@ clear
 close all
 
 %%
-plot_states = 0;
-plot_set = 1;
+plot_states = 1;
+plot_set = 0;
 
 wind_spd = 12;
-m_ac = 500;
-result_set = 'res5';
+m_ac = 1000;
+result_set = 'res6';
 
 if plot_states
     
