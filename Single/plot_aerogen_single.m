@@ -120,8 +120,9 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     subplot(plot_rows, plot_cols, fig_val)
     hold on
     plot(time, dr1*180/pi)
-    title('Dr')
+    title('Control [dr]')
     xlabel('Time [s]')
+    ylabel('Yaw Rate [deg/s]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
@@ -139,6 +140,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     plot(time, de1*180/pi)
     title('Control [de]')
     xlabel('Time [s]')
+    ylabel('Pitch Rate [deg/s]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
@@ -159,7 +161,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     plot(time, F1_aero_r)
     title('Aero Force')
     xlabel('Time [s]')
-    ylabel('Aero Force[N]')
+    ylabel('Aero Force [N]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)

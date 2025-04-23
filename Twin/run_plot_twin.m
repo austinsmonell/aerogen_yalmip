@@ -1,13 +1,13 @@
 clc
 clear
-close all
+% close all
 
 %%
 plot_states = 1;
-plot_set = 0;
+plot_set = 1;
 
-wind_spd = 12;
-m_ac = 1000;
+wind_spd = 4;
+m_ac = 400;
 result_set = 'res7';
 
 if plot_states
@@ -29,6 +29,7 @@ if plot_set
     resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
     load(resPath);
 
+    figure
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('Twin Power Curve')
     xlabel('Mass [kg]')

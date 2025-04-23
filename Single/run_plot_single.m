@@ -3,11 +3,11 @@ clear
 close all
 
 %%
-plot_states = 0;
+plot_states = 1;
 plot_set = 1;
 
-wind_spd = 8;
-m_ac = 500;
+wind_spd = 12;
+m_ac = 200;
 result_set = 'res6';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
@@ -27,6 +27,7 @@ if plot_set
     resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
     load(resPath);
 
+    figure
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('Single Power Curve')
     xlabel('Mass [kg]')

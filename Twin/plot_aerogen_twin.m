@@ -161,8 +161,9 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     hold on
     plot(time, dr1*180/pi)
     plot(time, dr2*180/pi)
-    title('Rudder')
+    title('Control [dr]')
     xlabel('Time [s]')
+    ylabel('Yaw Rate [deg/s]')
     legend('dr1', 'dr2')
     fig_val = fig_val+1;
 
@@ -184,6 +185,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     plot(time, de2*180/pi)
     title('Control [de]')
     xlabel('Time [s]')
+    ylabel('Pitch Rate [deg/s]')
     legend('de1', 'de2')
     fig_val = fig_val+1;
 
@@ -207,6 +209,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     plot(time, F2_aero_r)
     title('Aero Force')
     xlabel('Time [s]')
+    ylabel('Aero Force [N]')
     legend('F1aero','F2aero')
     fig_val = fig_val+1;
 
