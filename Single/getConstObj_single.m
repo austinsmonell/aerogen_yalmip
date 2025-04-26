@@ -2,9 +2,9 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, 
     %initial/final condition & limits
     u_up = [0; 1; 1];
     u_lw = [-1; -1; -1];
-    x_up = [inf;  inf; 100; pi/3; inf; inf; inf; inf];
+    x_up = [inf;  inf; 200; pi/3; inf; inf; inf; inf];
     x_lw = [-inf; -inf; 1; -pi/3; -inf; -inf; -inf; -inf];
-    x0_up = [0; inf; 100; pi/3; pi; 0; 0; 10];
+    x0_up = [0; inf; 200; pi/3; pi; 0; 0; 10];
     x0_lw = [0; 0; 1; -pi/3; -pi;  0; 0; -10];
     cyl_idx = [2, 3, 4, 6, 7, 8];
 

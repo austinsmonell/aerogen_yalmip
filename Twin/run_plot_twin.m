@@ -6,8 +6,8 @@ clear
 plot_states = 1;
 plot_set = 1;
 
-wind_spd = 4;
-m_ac = 400;
+wind_spd = 10;
+m_ac = 16000;
 result_set = 'res7';
 
 if plot_states
