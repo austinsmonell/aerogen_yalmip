@@ -13,11 +13,11 @@ load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 400;
+max_time = 200;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
-alpha_lim = 18*pi/180;
+alpha_lim = 17.2*pi/180;
 p = getParams(); p(31) = tf; p(32) = dt;
 
 %% Define variables/params
@@ -26,7 +26,7 @@ nu = 3;
 
 pwr_figure = figure;
 wind_spd_vec = 12:-2:2;
-m_ac_vec = 0:100000:1000000;
+m_ac_vec = 0:1000:10000;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);

@@ -4,10 +4,10 @@ close all
 
 %%
 plot_states = 1;
-plot_set = 0;
+plot_set = 1;
 
 wind_spd = 12;
-m_ac = 300000;
+m_ac = 10000;
 result_set = 'res7';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
