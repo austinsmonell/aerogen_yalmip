@@ -21,9 +21,9 @@ va2_v = x(14, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :)*50000000;
-de1 = u(2, :);
-de2 = u(3, :);
+m_ctr = u(1, :)*20000;
+de1 = u(2, :)*2;
+de2 = u(3, :)*2;
 dr1 = u(4, :)*(4*pi/(p(31)+p(32)));
 dr2 = u(5, :)*(4*pi/(p(31)+p(32)));
 ds1 = 0;
@@ -88,19 +88,21 @@ F2_xb = -cos(alpha2).*D2 + sin(alpha2).*L2;%done
 F1_yb = q1*S.*(CYb*beta1);
 F2_yb = q2*S.*(CYb*beta2);
 
-x1_dot = va1_u.*cos(psi1)+va1_v.*sin(psi1);
-y1_dot = va1_u.*sin(psi1)-va1_v.*cos(psi1);
+x1_dot = va1_u.*cos(psi1)-va1_v.*sin(psi1);
+y1_dot = -va1_u.*sin(psi1)-va1_v.*cos(psi1);
 psi1_dot = dr1;
-x2_dot = va2_u.*cos(psi2)+va2_v.*sin(psi2);
-y2_dot = va2_u.*sin(psi2)-va2_v.*cos(psi2);
+x2_dot = va2_u.*cos(psi2)-va2_v.*sin(psi2);
+y2_dot = -va2_u.*sin(psi2)-va2_v.*cos(psi2);
 psi2_dot = dr2;
 
 theta1_dot = de1;
 theta2_dot = de2;
-va1_u_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)-(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3);
-va2_u_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)-(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3);
-va1_v_dot = (-F1_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi1))/(m_ac+m_teth/3);
-va2_v_dot = (-F2_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi2))/(m_ac+m_teth/3);
+a_c1 = va1_u.*psi1_dot;
+a_c2 = va2_u.*psi2_dot;
+va1_u_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)+(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3)+a_c1.*sin(beta1);
+va2_u_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)+(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3)+a_c2.*sin(beta2);
+va1_v_dot = (F1_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi1))/(m_ac+m_teth/3)-a_c1.*cos(beta1);
+va2_v_dot = (F2_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi2))/(m_ac+m_teth/3)-a_c2.*cos(beta2);
 
 F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 F2_aero_r = F2_xb.*(-sin(theta2))+F2_zb.*(cos(theta2));%done

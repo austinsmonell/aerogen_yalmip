@@ -1,14 +1,14 @@
 clc
 clear
-close all
+% close all
 
 %%
 plot_states = 1;
 plot_set = 1;
 
 wind_spd = 12;
-m_ac = 10000;
-result_set = 'res7';
+m_ac = 0;
+result_set = 'res9';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
     load(strcat(solnPath, '_states.mat'))

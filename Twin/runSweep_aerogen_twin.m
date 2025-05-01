@@ -7,13 +7,13 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res8';
+results_run = 'res9';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
 load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 200;
+max_time = 600;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
@@ -26,8 +26,8 @@ nx = 14;
 nu = 5;
 
 pwr_figure = figure;
-wind_spd_vec = 12:-2:2;
-m_ac_vec = 0:2000:16000;
+wind_spd_vec = 12:-1:6;
+m_ac_vec = 0:1:20;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
@@ -72,7 +72,7 @@ for i = 1:length(m_ac_vec)
             ctrs = value(u);
 %             plot_aerogen_twin(states,ctrs,p,timeVec);
 
-            pwr_mesh(j, i) = mean(-u(1, :).*50000000.*x(2, :)/1000);
+            pwr_mesh(j, i) = mean(-u(1, :).*20000.*x(2, :)/1000);
             close(pwr_figure);
             pwr_figure = figure;
             surf(m_ac_mesh, wind_spd_mesh, pwr_mesh);

@@ -6,12 +6,12 @@ yalmip('clear')
 addpath('..\')
 
 save_soln = 1;
-use_guess = 0;
+use_guess = 1;
 save_name = 'Solns/soln_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 500;
+max_time = 600;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
