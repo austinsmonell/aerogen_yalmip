@@ -27,7 +27,7 @@ nu = 5;
 
 pwr_figure = figure;
 wind_spd_vec = 12:-1:11;
-m_ac_vec = 11000:1000:20000;
+m_ac_vec = 6000:1000:20000;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
