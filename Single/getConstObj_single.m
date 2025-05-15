@@ -29,7 +29,7 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, 
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
     Constraints = [Constraints, va1_r./va1_u <= (alpha_lim-theta1), va1_r./va1_u >= (-alpha_lim-theta1),...
-                              va1_v./va1_u <= 10*pi/180, va1_v./va1_u >= -10*pi/180];
+                              va1_v./va1_u <= 60*pi/180, va1_v./va1_u >= -60*pi/180];
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];

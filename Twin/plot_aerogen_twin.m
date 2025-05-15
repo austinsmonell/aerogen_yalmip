@@ -21,9 +21,9 @@ va2_v = x(14, :);
 % theta1_dot = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :)*20000;
-de1 = u(2, :)*2;
-de2 = u(3, :)*2;
+m_ctr = u(1, :)*20000000;
+de1 = u(2, :)*0.5;
+de2 = u(3, :)*0.5;
 dr1 = u(4, :)*(4*pi/(p(31)+p(32)));
 dr2 = u(5, :)*(4*pi/(p(31)+p(32)));
 ds1 = 0;
@@ -199,10 +199,10 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, (-m_ctr.*sigma_dot)/1000)
+    plot(time, (-m_ctr.*sigma_dot)/1000000)
     title('Objective')
     xlabel('Time [s]')
-    ylabel('Power [kW]')
+    ylabel('Power [MW]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
@@ -226,7 +226,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     fig_val = fig_val+1;
 
     sgtitle(strcat('Twin:', string(vw), 'mps-', string(m_ac), 'kg'))
-    display(mean(-m_ctr.*x(2, :)/1000))
+    display(mean(-m_ctr.*x(2, :)/1000000))
 
     %% 3D Plot
     figure
