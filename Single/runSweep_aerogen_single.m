@@ -23,10 +23,10 @@ p = getParams(); p(31) = tf; p(32) = dt;
 %% Define variables/params
 nx = 8; 
 nu = 3; 
-
+load_name = strcat(save_path, 'soln_', string(85),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-1:6;
-m_ac_vec = 6000:2000:20000;
+m_ac_vec = 90:5:200;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);

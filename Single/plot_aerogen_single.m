@@ -12,7 +12,7 @@ y1 = x(7, :);
 va1_v = x(8, :);
 
 %Controls: dist1
-m_ctr = u(1, :)*20000000;
+m_ctr = u(1, :)*20000;
 de1 = u(2, :)*2;
 ds1 = 0;
 dr1 = u(3, :)*4*pi/(p(31)+p(32));
@@ -149,10 +149,10 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, -m_ctr.*sigma_dot./1000000)
+    plot(time, -m_ctr.*sigma_dot./1000)
     title('Objective')
     xlabel('Time [s]')
-    ylabel('Power [MW]')
+    ylabel('Power [kW]')
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
@@ -170,7 +170,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     fig_val = fig_val+1;
 
     sgtitle(strcat('Single:', string(vw), 'mps-', string(m_ac), 'kg'))
-    display(mean(-m_ctr.*x(2, :)/1000000))
+    display(mean(-m_ctr.*x(2, :)/1000))
 
     %% 3D Plot
     figure
