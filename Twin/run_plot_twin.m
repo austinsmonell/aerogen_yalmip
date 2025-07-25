@@ -9,8 +9,8 @@ plot_set = 0;
 create_set = 0;
 
 wind_spd = 12;
-m_ac = 85;
-result_set = 'res10';
+m_ac = 5;
+result_set = 'res12';
 
 if plot_states
     
@@ -45,10 +45,12 @@ if create_set
         load(state_path)
         load(ctr_path)
         name = state_file.name;
-        vals = extract(name, digitsPattern);
-        mass = str2num(vals{1});
-        wind = str2num(vals{2});
-        pwr_mesh(find(wind_spd_vec == wind), find(m_ac_vec == mass)) = mean(-ctrs(1, :).*20000.*states(2, :)/1000);
+        vals = regexp(name, '[\d.]+', 'match');
+        vals = str2double(vals);
+        mass = vals(1);
+        wind = vals(2);
+        
+        pwr_mesh(find(wind_spd_vec == wind), find(m_ac_vec == mass)) = mean(-ctrs(1, :).*30000.*states(2, :)/1000);
     end
     [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
     results_name = strcat('Results/', result_set, '_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
