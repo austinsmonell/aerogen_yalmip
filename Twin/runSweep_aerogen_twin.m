@@ -6,8 +6,8 @@ yalmip('clear')
 addpath('..\')
 
 save_soln = 1;
-use_guess = 1;
-results_run = 'res13';
+use_guess = 0;
+results_run = 'res14';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
 load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res13', '/');
 load_name = 'Solns/soln_0kg_12mps';
@@ -25,10 +25,10 @@ p = getParams(); p(31) = tf; p(32) = dt;
 %% Define variables/params
 nx = 14; 
 nu = 5;
-load_name = strcat(load_path, 'soln_', string(5),'kg_', string(11), 'mps');
+load_name = strcat(load_path, 'soln_', string(5),'kg_', string(12), 'mps');
 pwr_figure = figure;
-wind_spd_vec = 10:-1:6;
-m_ac_vec = 5:5:200;
+wind_spd_vec = 12:-1:6;
+m_ac_vec = 20:5:200;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
@@ -73,7 +73,7 @@ for i = 1:length(m_ac_vec)
             ctrs = value(u);
 %             plot_aerogen_twin(states,ctrs,p,timeVec);
 
-            pwr_mesh(j, i) = mean(-u(1, :).*30000.*x(2, :)/1000);
+            pwr_mesh(j, i) = mean(-u(1, :).*20000.*x(2, :)/1000);
             close(pwr_figure);
             pwr_figure = figure;
             surf(m_ac_mesh, wind_spd_mesh, pwr_mesh);

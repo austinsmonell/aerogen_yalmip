@@ -6,8 +6,8 @@ yalmip('clear')
 addpath('..\')
 
 save_soln = 1;
-use_guess = 1;
-results_run = 'res10';
+use_guess = 0;
+results_run = 'res11';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
 load_name = 'Solns/soln_0kg_12mps';
 % Define horizon
@@ -26,7 +26,7 @@ nu = 3;
 load_name = strcat(save_path, 'soln_', string(85),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-1:6;
-m_ac_vec = 90:5:200;
+m_ac_vec = 5:5:200;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);

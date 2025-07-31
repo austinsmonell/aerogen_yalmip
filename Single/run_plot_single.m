@@ -1,13 +1,13 @@
 clc
-clear
+% clear
 % close all
 
 %%
 plot_states = 0;
 plot_set = 1;
-create_set = 0;
+create_set = 1;
 
-wind_spd = 12;
+wind_spd = 6;
 m_ac = 5;
 result_set = 'res10';
 if plot_states

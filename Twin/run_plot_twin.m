@@ -1,11 +1,11 @@
 clc
-clear
+% clear
 % close all
 
 %%
 addpath('../')
-plot_states = 1;
-plot_set = 0;
+plot_states = 0;
+plot_set = 1;
 create_set = 0;
 
 wind_spd = 12;
@@ -49,8 +49,8 @@ if create_set
         vals = str2double(vals);
         mass = vals(1);
         wind = vals(2);
-        
-        pwr_mesh(find(wind_spd_vec == wind), find(m_ac_vec == mass)) = mean(-ctrs(1, :).*30000.*states(2, :)/1000);
+
+        pwr_mesh(find(wind_spd_vec == wind), find(m_ac_vec == mass)) = mean(-ctrs(1, :).*20000.*states(2, :)/1000);
     end
     [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
     results_name = strcat('Results/', result_set, '_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
@@ -72,3 +72,10 @@ if plot_set
     ylabel('Wind Speed [mps]')
     zlabel('Average Power [kw]')
 end
+%%
+figure
+surf(results.m_ac_mesh, results.wind_spd_mesh, pwr_mesh_twin-pwr_mesh_sgl);
+title('Twin Power Curve')
+xlabel('Mass [kg]')
+ylabel('Wind Speed [mps]')
+zlabel('Average Power [kw]')
