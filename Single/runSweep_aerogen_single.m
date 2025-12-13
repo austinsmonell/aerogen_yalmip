@@ -7,9 +7,9 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res10';
+results_run = 'res14';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
-load_name = 'Solns/soln_0kg_12mps';
+load_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
@@ -23,10 +23,10 @@ p = getParams(); p(31) = tf; p(32) = dt;
 %% Define variables/params
 nx = 8; 
 nu = 3; 
-load_name = strcat(save_path, 'soln_', string(85),'kg_', string(12), 'mps');
+% load_name = strcat(save_path, 'soln_', string(85),'kg_', string(12), 'mps');
 pwr_figure = figure;
-wind_spd_vec = 12:-1:6;
-m_ac_vec = 90:5:200;
+wind_spd_vec = 12:-2:4;
+m_ac_vec = 0:25:250;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);

@@ -5,20 +5,20 @@ close all
 yalmip('clear')
 addpath('..\')
 
-save_soln = 0;
-use_guess = 1;
-save_name = 'Solns/soln_0kg_12mps';
+save_soln = 1;
+use_guess = 0;
+save_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 600;
+max_time = 200;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 alpha_up = 18*pi/180;
 alpha_low = -18*pi/180;
 wind_spd = 12;
-m_ac = 5;
+m_ac = 0;
 p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd; p(6) = m_ac;
 
 %% Define variables/params

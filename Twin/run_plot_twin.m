@@ -9,8 +9,8 @@ plot_set = 0;
 create_set = 0;
 
 wind_spd = 12;
-m_ac = 5;
-result_set = 'res12';
+m_ac = 125;
+result_set = 'res20';
 
 if plot_states
     
@@ -27,8 +27,8 @@ if plot_states
     plot_aerogen_twin(states,ctrs,p,timeVec);
 end
 %% Create Power Curve
-wind_spd_vec = 12:-1:6;
-m_ac_vec = 5:5:200;
+wind_spd_vec = 12:-2:4;
+m_ac_vec = 0:25:200;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 
 if create_set
@@ -65,7 +65,10 @@ if plot_set
     resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
     load(resPath);
 
-    figure
+    figure(1)
+    hold on
+    zlim([0 350])
+    view([45, 45])
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('Twin Power Curve')
     xlabel('Mass [kg]')

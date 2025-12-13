@@ -207,8 +207,8 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, F1_aero_r)
-    plot(time, F2_aero_r)
+    plot(time, F1_aero_r-F2_aero_r)
+%     plot(time, F2_aero_r)
     title('Aero Force')
     xlabel('Time [s]')
     ylabel('Aero Force [N]')
