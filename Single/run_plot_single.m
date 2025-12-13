@@ -19,8 +19,8 @@ if plot_states
     gridSz = 60;
     dt = tf/(gridSz-1);
     timeVec = linspace(0, tf, gridSz);
-    p = getParams(); p(31) = tf; p(32) = dt;
-    p(13) = wind_spd; p(6) = m_ac;
+    p = getParams(); p(19) = tf; p(20) = dt;
+    p(10) = wind_spd; p(3) = m_ac;
     plot_aerogen_single(states,ctrs,p,timeVec);
 end
 %% Create Power Curve

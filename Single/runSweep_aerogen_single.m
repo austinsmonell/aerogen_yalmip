@@ -18,7 +18,7 @@ dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 alpha_lim = 18*pi/180;
-p = getParams(); p(31) = tf; p(32) = dt;
+p = getParams(); p(19) = tf; p(20) = dt;
 
 %% Define variables/params
 nx = 8; 
@@ -41,10 +41,10 @@ for i = 1:length(m_ac_vec)
         yalmip('clear')
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
         u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
-        p(13) = wind_spd_vec(j);
-        p(6) = m_ac_vec(i);
+        p(10) = wind_spd_vec(j);
+        p(3) = m_ac_vec(i);
         %% Contraints & Objective
-        [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u);
+        [Constraints,Objective] = getConstObj_single(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u);
         
         %% Set some options for YALMIP and solver
         if use_guess

@@ -17,7 +17,7 @@ ctr_obj_gain = 10;
 alpha_lim = 18*pi/180;
 wind_spd = 12;
 m_ac = 0;
-p = getParams(); p(31) = tf; p(32) = dt; p(13) = wind_spd; p(6) = m_ac;
+p = getParams(); p(19) = tf; p(20) = dt; p(10) = wind_spd; p(3) = m_ac;
 
 %% Define variables/params
 nx = 8; 
@@ -26,7 +26,7 @@ x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va1_u, 4: theta, 5:psi, 6:x1, 7:x2
 u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
     
 %% Contraints & Objective
-[Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u);
+[Constraints,Objective] = getConstObj_single(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u);
 
 %% Set some options for YALMIP and solver
 if use_guess

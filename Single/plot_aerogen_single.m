@@ -13,39 +13,27 @@ va1_v = x(8, :);
 
 %Controls: dist1
 m_ctr = u(1, :)*20000;
-de1 = u(2, :)*2;
+de1 = u(2, :)*1;
 ds1 = 0;
-dr1 = u(3, :)*4*pi/(p(31)+p(32));
+dr1 = u(3, :)*4*pi/(p(19)+p(20));
 
 % extract parameters
 r_gen = p(1);
 moi_g = p(2);
-d = p(5);
-m_ac = p(6);
-rho = p(7);
-S = p(8);
-CL0 = p(9);
-CLa = p(10);
-CD0 = p(11);
-e = p(12);
-vw = p(13);
-moi_ac_m = p(14);
-d_c = p(15);
-d_b = S/d_c;
-CMa = p(16);
-CMq = p(17);
-CMde = p(18);
-CNb = p(19);
-CNr = p(20);
-CNdr = p(21);
-CYb = p(22);
-moi_ac_n = p(23);
-CDb = p(24);
-g = p(25);
-m_teth = p(26);
-CD_eff_teth = p(27);
-CDds = p(29);
-omega = p(30);
+m_ac = p(3);
+rho = p(4);
+S = p(5);
+CL0 = p(6);
+CLa = p(7);
+CD0 = p(8);
+e = p(9);
+vw = p(10);
+CYb = p(11);
+g = p(12);
+m_teth = p(13);
+CD_eff_teth = p(14);
+CDds = p(17);
+omega = p(18);
 %% dynamics
 r1_dot = sigma_dot*r_gen;%done
 va1_r = -r1_dot+vw;%done

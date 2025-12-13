@@ -4,9 +4,9 @@ clear
 
 %%
 addpath('../')
-plot_states = 1;
-plot_set = 0;
-create_set = 0;
+plot_states = 0;
+plot_set = 1;
+create_set = 1;
 
 wind_spd = 12;
 m_ac = 125;
@@ -22,8 +22,8 @@ if plot_states
     gridSz = 60;
     dt = tf/(gridSz-1);
     timeVec = linspace(0, tf, gridSz);
-    p = getParams(); p(31) = tf; p(32) = dt;
-    p(13) = wind_spd; p(6) = m_ac;
+    p = getParams(); p(19) = tf; p(20) = dt;
+    p(10) = wind_spd; p(3) = m_ac;
     plot_aerogen_twin(states,ctrs,p,timeVec);
 end
 %% Create Power Curve

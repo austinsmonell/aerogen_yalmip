@@ -18,9 +18,7 @@ max_time = 200;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
-alpha_up = 18*pi/180;
-alpha_low = -18*pi/180;
-p = getParams(); p(31) = tf; p(32) = dt;
+p = getParams(); p(19) = tf; p(20) = dt;
 
 %% Define variables/params
 nx = 14; 
@@ -28,7 +26,7 @@ nu = 5;
 load_name = strcat(load_path, 'soln_', string(100),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 100:25:250;
+m_ac_vec = 0:25:250;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
@@ -44,10 +42,10 @@ for i = 1:length(m_ac_vec)
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
         u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
 
-        p(13) = wind_spd_vec(j);
-        p(6) = m_ac_vec(i);
+        p(10) = wind_spd_vec(j);
+        p(3) = m_ac_vec(i);
         %% Contraints & Objective
-        [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, alpha_up, ctr_obj_gain, nx, nu, x, u);
+        [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u);
         
         %% Set some options for YALMIP and solver
         if use_guess

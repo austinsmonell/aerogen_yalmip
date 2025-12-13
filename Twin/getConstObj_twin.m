@@ -1,4 +1,4 @@
-function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, alpha_up, ctr_obj_gain, nx, nu, x, u);
+function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u);
     %initial/final condition & limits
     u_up = [1;  1; 1; 1; 1];%; 0; 0];%; 2*pi/dt+1e-6; 2*pi/dt+1e-6];
     u_lw = [-1; -1; -1; -1; -1];%; 0; 0];%; -2*pi/dt-1e-6; -2*pi/dt-1e-6];
@@ -21,21 +21,24 @@ function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, alpha_low, al
     %   other limits
     sigma_dot = x(2, :);
     r_gen = p(1);
-    vw = p(13);
+    vw = p(10);
     theta1 = x(3, :);
     va1_u = x(5, :);
     theta2 = x(4, :);
     va2_u = x(6, :);
     va1_v = x(13, :);
     va2_v = x(14, :);
+    alpha_up =  p(16);
+    alpha_low = p(15);
+    beta_lim = p(21);
     
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
     va2_r = r1_dot+vw;
-    Constraints = [Constraints, va1_r./va1_u <= (alpha_up-theta1), va1_r./va1_u >= (alpha_low-theta1),...
-                   va2_r./va2_u <= (alpha_up-theta2), va2_r./va2_u >= (alpha_low-theta2),...
-                   va1_v./va1_u <= 15*pi/180, va1_v./va1_u >= -15*pi/180,...
-                   va2_v./va2_u <= 15*pi/180, va2_v./va2_u >= -15*pi/180];
+    Constraints = [Constraints, va1_r./va1_u <= (alpha_up*pi/180-theta1), va1_r./va1_u >= (alpha_low*pi/180-theta1),...
+                   va2_r./va2_u <= (alpha_up*pi/180-theta2), va2_r./va2_u >= (alpha_low*pi/180-theta2),...
+                   va1_v./va1_u <= beta_lim*pi/180, va1_v./va1_u >= -beta_lim*pi/180,...
+                   va2_v./va2_u <= beta_lim*pi/180, va2_v./va2_u >= -beta_lim*pi/180];
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];

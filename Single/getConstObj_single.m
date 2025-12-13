@@ -1,4 +1,4 @@
-function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, ctr_obj_gain, nx, nu, x, u)
+function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u)
     %initial/final condition & limits
     u_up = [0; 1; 1];
     u_lw = [-1; -1; -1];
@@ -21,15 +21,18 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, alpha_lim, 
     %   other limits
     sigma_dot = x(2, :);
     r_gen = p(1);
-    vw = p(13);
+    vw = p(10);
     theta1 = x(4, :);
     va1_u = x(3, :);
     va1_v = x(8, :);
+    alpha_up =  p(16);
+    alpha_low = p(15);
+    beta_lim = p(21);
     
     r1_dot = sigma_dot*r_gen;
     va1_r = -r1_dot+vw;
-    Constraints = [Constraints, va1_r./va1_u <= (alpha_lim-theta1), va1_r./va1_u >= (-alpha_lim-theta1),...
-                              va1_v./va1_u <= 15*pi/180, va1_v./va1_u >= -15*pi/180];
+    Constraints = [Constraints, va1_r./va1_u <= (alpha_up*pi/180-theta1), va1_r./va1_u >= (alpha_low*pi/180-theta1),...
+                              va1_v./va1_u <= beta_lim*pi/180, va1_v./va1_u >= -beta_lim*pi/180];
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];
