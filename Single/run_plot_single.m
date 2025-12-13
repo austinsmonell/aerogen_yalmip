@@ -3,9 +3,9 @@ clear
 % close all
 
 %%
-plot_states = 1;
-plot_set = 0;
-create_set = 0;
+plot_states = 0;
+plot_set = 1;
+create_set = 1;
 
 wind_spd = 12;
 m_ac = 125;
@@ -62,6 +62,7 @@ if plot_set
     
     figure(1)
     hold on
+    grid on
     zlim([0 350])
     view([45, 45])
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);

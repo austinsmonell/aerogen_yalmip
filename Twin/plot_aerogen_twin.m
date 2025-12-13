@@ -85,12 +85,14 @@ psi2_dot = dr2;
 
 theta1_dot = de1;
 theta2_dot = de2;
-a_c1 = va1_u.*psi1_dot;
-a_c2 = va2_u.*psi2_dot;
-va1_u_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)+(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3)+a_c1.*sin(beta1);
-va2_u_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)+(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3)+a_c2.*sin(beta2);
-va1_v_dot = (F1_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi1))/(m_ac+m_teth/3)-a_c1.*cos(beta1);
-va2_v_dot = (F2_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi2))/(m_ac+m_teth/3)-a_c2.*cos(beta2);
+a_u1 = va1_v.*psi1_dot;
+a_v1 = -va1_u.*psi1_dot;
+a_u2 = va2_v.*psi2_dot;
+a_v2 = -va2_u.*psi2_dot;
+va1_u_dot = (F1_xb.*cos(theta1)+ F1_zb.*sin(theta1)+(m_ac+m_teth/2-omega*rho)*g*sin(psi1))/(m_ac+m_teth/3)+a_u1;
+va2_u_dot = (F2_xb.*cos(theta2)+ F2_zb.*sin(theta2)+(m_ac+m_teth/2-omega*rho)*g*sin(psi2))/(m_ac+m_teth/3)+a_u2;
+va1_v_dot = (F1_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi1))/(m_ac+m_teth/3)+a_v1;
+va2_v_dot = (F2_yb+(m_ac+m_teth/2-omega*rho)*g*cos(psi2))/(m_ac+m_teth/3)+a_v2;
 
 F1_aero_r = F1_xb.*(-sin(theta1))+F1_zb.*(cos(theta1));%done
 F2_aero_r = F2_xb.*(-sin(theta2))+F2_zb.*(cos(theta2));%done

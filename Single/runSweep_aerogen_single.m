@@ -7,7 +7,7 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res14';
+results_run = 'res15';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
 load_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon

@@ -7,16 +7,20 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 0;
-save_name = 'Solns/warmstart_0kg_12mps';
+save_name = 'Solns/warmstart_50kg_12mps';
+% load_name = 'Solns/warmstart_150kg_12mps';
+% load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res20', '/');
+% load_name = strcat(load_path, 'soln_', string(125),'kg_', string(12), 'mps');
+
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 200;
+max_time = 400;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 wind_spd = 12;
-m_ac = 0;
+m_ac = 50;
 p = getParams(); p(19) = tf; p(20) = dt; p(10) = wind_spd; p(3) = m_ac;
 
 %% Define variables/params
@@ -30,8 +34,8 @@ u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi
 
 %% Set some options for YALMIP and solver
 if use_guess
-    load(strcat(save_name, '_states.mat'));
-    load(strcat(save_name, '_ctrs.mat'));
+    load(strcat(load_name, '_states.mat'));
+    load(strcat(load_name, '_ctrs.mat'));
     assign(x, states);
     assign(u, ctrs);
     options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time);

@@ -4,13 +4,13 @@ clear
 
 %%
 addpath('../')
-plot_states = 0;
-plot_set = 1;
-create_set = 1;
+plot_states = 1;
+plot_set = 0;
+create_set = 0;
 
 wind_spd = 12;
-m_ac = 125;
-result_set = 'res20';
+m_ac = 0;
+result_set = 'res21';
 
 if plot_states
     
@@ -67,6 +67,7 @@ if plot_set
 
     figure(1)
     hold on
+    grid on
     zlim([0 350])
     view([45, 45])
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
