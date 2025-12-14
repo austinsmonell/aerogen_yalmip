@@ -4,13 +4,13 @@ clear
 
 %%
 addpath('../')
-plot_states = 1;
-plot_set = 0;
+plot_states = 0;
+plot_set = 1;
 create_set = 0;
 
 wind_spd = 12;
-m_ac = 0;
-result_set = 'res21';
+m_ac = 190;
+result_set = 'res22';
 
 if plot_states
     
@@ -28,7 +28,7 @@ if plot_states
 end
 %% Create Power Curve
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 0:25:200;
+m_ac_vec = 0:25:400;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 
 if create_set

@@ -5,7 +5,7 @@ close all
 yalmip('clear')
 addpath('..\')
 
-save_soln = 0;
+save_soln = 1;
 use_guess = 0;
 save_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon
