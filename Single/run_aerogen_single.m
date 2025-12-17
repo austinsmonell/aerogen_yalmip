@@ -7,7 +7,7 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 0;
-save_name = 'Solns/warmstart_0kg_12mps';
+save_name = 'Solns/warmstart_60kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
@@ -16,7 +16,7 @@ timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 alpha_lim = 18*pi/180;
 wind_spd = 12;
-m_ac = 0;
+m_ac = 60;
 p = getParams(); p(19) = tf; p(20) = dt; p(10) = wind_spd; p(3) = m_ac;
 
 %% Define variables/params

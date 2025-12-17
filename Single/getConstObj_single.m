@@ -6,7 +6,7 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, ctr_obj_gai
     x_lw = [-inf; -inf; 1; -pi/3; -inf; -inf; -inf; -inf];
     x0_up = [0; inf; 200; pi/3; 0; 0; 0; inf];
     x0_lw = [0; 0; 1; -pi/3; 0;  0; 0; -inf];
-    cyl_idx = [2, 3, 4, 6, 7, 8];
+    cyl_idx = [1, 2, 3, 4, 6, 7, 8];
 
     %% Contraints & Objective
     Constraints = [];

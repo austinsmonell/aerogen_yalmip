@@ -7,14 +7,14 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res22';
+results_run = 'res26';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
-load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res21', '/');
-load_name = 'Solns/warmstart_200kg_12mps';
+load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res26', '/');
+% load_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 400;
+max_time = 300;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
@@ -23,10 +23,10 @@ p = getParams(); p(19) = tf; p(20) = dt;
 %% Define variables/params
 nx = 14; 
 nu = 5;
-% load_name = strcat(load_path, 'soln_', string(50),'kg_', string(12), 'mps');
+load_name = strcat(load_path, 'soln_', string(100),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 225:25:600;
+m_ac_vec =120:20:300;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
@@ -90,7 +90,9 @@ for i = 1:length(m_ac_vec)
             disp('Hmm, something went wrong!');
             sol.info
             yalmiperror(sol.problem)
-            break;
+            if j == 1
+                break;
+            end
         end
     end
 end

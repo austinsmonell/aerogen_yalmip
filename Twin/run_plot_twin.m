@@ -9,8 +9,8 @@ plot_set = 1;
 create_set = 0;
 
 wind_spd = 12;
-m_ac = 190;
-result_set = 'res22';
+m_ac = 100;
+result_set = 'res25';
 
 if plot_states
     
@@ -28,7 +28,7 @@ if plot_states
 end
 %% Create Power Curve
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 0:25:400;
+m_ac_vec = 0:20:300;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 
 if create_set
@@ -68,7 +68,7 @@ if plot_set
     figure(1)
     hold on
     grid on
-    zlim([0 350])
+    zlim([0 100])
     view([45, 45])
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('Twin Power Curve')

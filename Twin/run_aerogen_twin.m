@@ -7,10 +7,10 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 0;
-save_name = 'Solns/warmstart_400kg_12mps';
-% load_name = 'Solns/warmstart_150kg_12mps';
-% load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res20', '/');
-% load_name = strcat(load_path, 'soln_', string(125),'kg_', string(12), 'mps');
+save_name = 'Solns/warmstart_0kg_12mps';
+% load_name = 'Solns/warmstart_200kg_12mps';
+% load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res15', '/');
+% load_name = strcat(load_path, 'soln_', string(100),'kg_', string(12), 'mps');
 
 % Define horizon
 tf = 10;
@@ -20,7 +20,7 @@ dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
 wind_spd = 12;
-m_ac = 400;
+m_ac = 0;
 p = getParams(); p(19) = tf; p(20) = dt; p(10) = wind_spd; p(3) = m_ac;
 
 %% Define variables/params

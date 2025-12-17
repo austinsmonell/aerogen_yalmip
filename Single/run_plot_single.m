@@ -8,8 +8,8 @@ plot_set = 0;
 create_set = 0;
 
 wind_spd = 12;
-m_ac = 250;
-result_set = 'res15';
+m_ac = 180;
+result_set = 'res21';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
     load(strcat(solnPath, '_states.mat'))
@@ -25,7 +25,7 @@ if plot_states
 end
 %% Create Power Curve
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 0:25:200;
+m_ac_vec = 0:20:300;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 
 if create_set
@@ -63,7 +63,7 @@ if plot_set
     figure(1)
     hold on
     grid on
-    zlim([0 350])
+    zlim([0 100])
     view([45, 45])
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('Single Power Curve')
