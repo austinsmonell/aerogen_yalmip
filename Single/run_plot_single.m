@@ -1,14 +1,15 @@
 clc
 clear
-% close all
+close all
 
 %%
-plot_states = 1;
+plot_states = 0;
 plot_set = 0;
 create_set = 0;
+plot_curve = 1;
 
 wind_spd = 12;
-m_ac = 180;
+m_ac = 60;
 result_set = 'res21';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
@@ -55,7 +56,7 @@ if create_set
     save(strcat(results_name, '.mat'), 'results')
 end
 
-%% Plot Power Curve
+%% Plot Power Sweep
 if plot_set
     resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
     load(resPath);
@@ -65,10 +66,51 @@ if plot_set
     grid on
     zlim([0 100])
     view([45, 45])
+    for i = 1:size(results.pwr_mesh, 1)
+        for j = 1:size(results.pwr_mesh, 2)
+            if results.pwr_mesh(i, j) < 0
+                results.pwr_mesh(i, j) = 0;
+            end
+        end
+    end
     surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
-    title('Single Power Curve')
-    xlabel('Mass [kg]')
-    ylabel('Wind Speed [mps]')
-    zlabel('Average Power [kw]')
+    title('Single-Kite Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    zlabel('Average Power [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    set(gcf, 'Position',  [100, 100, 1000, 800]);
+    xticks(0:50:300);
+    yticks(4:1:12);
+    zticks(0:20:100);
+end
+
+%% Plot Power Curve
+if plot_curve
+    resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
+    load(resPath);
     
+    figure()
+    hold on
+    grid on
+    ylim([0 100])
+    for i = 1:size(results.pwr_mesh, 1)
+        for j = 1:size(results.pwr_mesh, 2)
+            if results.pwr_mesh(i, j) < 0
+                results.pwr_mesh(i, j) = 0;
+            end
+        end
+    end
+    idx = find(results.m_ac_mesh==m_ac);
+    wnd = results.wind_spd_mesh(idx);
+    pwr = results.pwr_mesh(idx);
+    wnd_sweep = min(wnd):0.1:max(wnd);
+    plot(wnd_sweep, interp1(wnd, pwr, wnd_sweep, 'cubic'), '--', 'LineWidth',3);
+    scatter(wnd, pwr, 100, 'blue', 'filled', 'o');
+    legend('Cubic Interpolation', 'Simulated')
+    title('Single-Kite Average Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    xlabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    ylabel('Average Power [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    set(gcf, 'Position',  [100, 100, 1000, 800]);
+    xticks(4:1:12);
+    yticks(0:20:100);
 end

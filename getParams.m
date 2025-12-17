@@ -33,7 +33,7 @@ function p = getParams()
     omega = 0.0;%0
     tf = 0;
     dt = 0;
-    beta_lim = 15;
+    beta_lim = 15;%may need to be lowered
 
     p = [r_gen; moi_g; m_ac; rho; S; CL0; CLa; CD0; e; vw; CYb; g; m_teth; CD_eff_teth; alpha_min; alpha_max; CDds; omega; tf; dt; beta_lim];
 end

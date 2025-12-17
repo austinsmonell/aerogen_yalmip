@@ -63,112 +63,176 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     %% Generator
     plot_rows = 6; plot_cols = 2;fig_val = 1;
     figure
+    
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, sigma/(2*pi))
-    title('Sigma')
+    plot(time, sigma/(2*pi), 'LineWidth',2)
+    title('$\sigma$', 'Interpreter', 'latex', 'FontSize',18, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Sigma [revs]')
+    ylabel('$\sigma$ [revs]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, sigma_dot/(2*pi))
-    title('Sigma dot')
+    plot(time, sigma_dot/(2*pi), 'LineWidth',2)
+    title('$\dot{\sigma}$', 'Interpreter', 'latex', 'FontSize',18, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Sigma dot [rev/s]')
-    fig_val = fig_val+1;
-
-    subplot(plot_rows, plot_cols, fig_val)
-    hold on
-    plot(time, x1)
-    plot(time, y1)
-    title('Position')
-    xlabel('Time [s]')
-    ylabel('Position [m]')
-    legend('X', 'Y')
+    ylabel('$\dot{\sigma}$ [rev/s]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, va1_u)
-    title('Speed')
+    plot(time, x1, 'LineWidth',2)
+    plot(time, y1, 'LineWidth',2)
+    title('Position', 'Interpreter', 'latex', 'FontSize',14, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('U [mps]')
+    ylabel('Position [m]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    legend('$^wX$', '$^wY$', 'Interpreter', 'latex', 'FontSize',10, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, psi1*180/pi)
-    title('Heading')
+    plot(time, va1_u, 'LineWidth',2)
+    title('$V_a$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Psi [deg]')
+    ylabel('$V_a$ [mps]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, dr1*180/pi)
-    title('Control [dr]')
+    plot(time, psi1*180/pi, 'LineWidth',2)
+    title('$\psi$', 'Interpreter', 'latex', 'FontSize',16, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Yaw Rate [deg/s]')
+    ylabel('$\psi$ [deg]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, theta1*180/pi)
-    plot(time, alpha1*180/pi)
-    title('Attitude')
+    plot(time, dr1*180/pi, 'LineWidth',2)
+    title('$\dot{\psi}_c$', 'Interpreter', 'latex', 'FontSize',16, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Attitude [deg]')
-    legend('pitch', 'alpha')
+    ylabel('$\dot{\psi}_c$ [deg/s]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
     hold on
-    plot(time, de1*180/pi)
-    title('Control [de]')
+    plot(time, theta1*180/pi, 'LineWidth',2)
+    plot(time, alpha1*180/pi, 'LineWidth',2)
+    title('$\theta\;\&\;\alpha$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Pitch Rate [deg/s]')
+    ylabel('$\theta\;\&\;\alpha$ [deg]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    legend('$\theta$', '$\alpha$', 'Interpreter', 'latex', 'FontSize',10, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, m_ctr)
-    title('Gen Moment')
+    hold on
+    plot(time, de1*180/pi, 'LineWidth',2)
+    title('$\dot{\theta}_c$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Gen Moment [Nm]')
+    ylabel('$\dot{\theta}_c$ [deg/s]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, -m_ctr.*sigma_dot./1000)
-    title('Objective')
+    plot(time, F1_aero_r, 'LineWidth',2)
+    title('$^wF_r$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Power [kW]')
+    ylabel('$^wF_r$ [N]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, F1_aero_r)
-    title('Aero Force')
+    plot(time, beta1*180/pi, 'LineWidth',2)
+    title('$\beta$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('Aero Force [N]')
+    ylabel('$\beta$', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
+    fig_val = fig_val+1;
+    
+    subplot(plot_rows, plot_cols, fig_val)
+    plot(time, m_ctr, 'LineWidth',2)
+    title('$M_c$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    xlabel('Time [s]')
+    ylabel('$M_c$ [Nm]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
     subplot(plot_rows, plot_cols, fig_val)
-    plot(time, beta1*180/pi)
-    title('Side Slip')
+    plot(time, -m_ctr.*sigma_dot./1000, 'LineWidth',2)
+    title('Power Generated', 'Interpreter', 'latex', 'FontSize',14, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('beta [deg]')
+    ylabel('Power [kW]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    grid on
+    box on
     fig_val = fig_val+1;
 
-    sgtitle(strcat('Single:', string(vw), 'mps-', string(m_ac), 'kg'))
+    
+
+    sgtitle(strcat('Single-Kite States: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    set(gcf, 'Position',  [100, 100, 1200, 1000])
     display(mean(-m_ctr.*x(2, :)/1000))
 
     %% 3D Plot
     figure
-    plot3(x(6, :), x(7, :), x(1, :)*p(1))
+    hold on
+    grid on
     axis equal 
-    title(strcat('Single:', string(vw), 'mps-', string(m_ac), 'kg'))
-    xlabel('X [m]')
-    ylabel('Y [m]')
-    zlabel('Z [m]')
+    view([35 40])
+    x1 = x(6, :); y1 = -x(1, :)*p(1); z1 = x(7, :);
 
+%     plot3(x1, y1, z1)
+    plot3([x1 0],ones(size([y1 0]))*max([x1 0])+2,[z1 0],'k--')
+    patch(x1, y1, z1, -m_ctr.*sigma_dot./1000, 'EdgeColor', 'interp', 'LineWidth', 5, 'FaceColor', 'none');
+    title(strcat('Single-Kite Trajectory: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    xlabel('$^wX$ [m]', 'Interpreter', 'latex', 'FontSize',20, 'FontWeight','bold')
+    ylabel('$^wZ$ [m]', 'Interpreter', 'latex', 'FontSize',20, 'FontWeight','bold')
+    zlabel('$^wY$ [m]', 'Interpreter', 'latex', 'FontSize',20, 'FontWeight','bold')
+
+    xlim([min(x1)-10, max(x1)+10]);
+    ylim([min(y1)-2, max(y1)+2]);
+    zlim([min(z1)-10, max(z1)+10]);
+    
+    colormap(flipud(turbo(256)))
+    cb = colorbar;
+    cb.Label.String = '$P$ [kW]';  % Replace with your label, e.g., 'Altitude (m)'
+    cb.Label.Interpreter = 'latex';  % Optional: for math symbols like '$z$ (km)'
+    cb.Label.FontSize = 20;
+    set(gcf, 'Position',  [1400, 100, 1000, 1000]);
+
+    n_arrows = 2;
+%     idx = round(linspace(1, length(x1)-1, n_arrows));
+    idx = mod(round((1:n_arrows)' * length(x1) / n_arrows), length(x1))+1;    
+    arrow_pos = [x1(idx)', y1(idx)', z1(idx)'];  % Start points
+    arrow_dir = [diff([x1'; 0]), diff([y1'; 0]), diff([z1'; 0])];  % Tangent directions
+    for i = 1:length(arrow_dir)
+        arrow_dir(i, :) = normalize(arrow_dir(i,:), 'norm');
+    end
+
+    qv = quiver3(arrow_pos(:,1), arrow_pos(:,2), arrow_pos(:,3), ...
+        arrow_dir(idx,1), arrow_dir(idx,2), arrow_dir(idx,3));
+    qv.LineWidth = 3;
+    qv.AutoScaleFactor = 0.3;
+    qv.Marker = '.';
+    qv.MarkerFaceColor = 'black';
+    qv.Color = '#FFD700';
+    qv.MaxHeadSize = 0.3;
+    
 
 end
