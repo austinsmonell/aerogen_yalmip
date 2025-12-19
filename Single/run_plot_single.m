@@ -5,21 +5,28 @@ clear
 %%
 plot_states = 0;
 plot_set = 1;
-create_set = 0;
+create_set = 1;
 plot_curve = 0;
+use_full_cyl = 1;
 
 wind_spd = 12;
 m_ac = 0;
 result_set = 'res23';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
-    load(strcat(solnPath, '_states.mat'))
-    load(strcat(solnPath, '_ctrs.mat'))
+    if use_full_cyl
+        load(strcat(solnPath, '_full_states.mat'))
+        load(strcat(solnPath, '_full_ctrs.mat'))
+    else
+        load(strcat(solnPath, '_states.mat'))
+        load(strcat(solnPath, '_ctrs.mat'))
+    end
+
     
     tf = 10;
     gridSz = 60;
     dt = tf/(gridSz-1);
-    timeVec = linspace(0, tf, gridSz);
+    timeVec = linspace(0, tf*size(states, 2)/gridSz, size(states, 2));
     p = getParams(); p(19) = tf; p(20) = dt;
     p(10) = wind_spd; p(3) = m_ac;
     plot_aerogen_single(states,ctrs,p,timeVec);
@@ -30,8 +37,13 @@ m_ac_vec = 0:20:300;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 
 if create_set
-    states_files = dir(fullfile(strcat('../../aerogen_yalmip_results/Single/', result_set), '*_states.mat'));
-    ctrs_files = dir(fullfile(strcat('../../aerogen_yalmip_results/Single/', result_set), '*_ctrs.mat'));
+    if use_full_cyl   
+        states_files = dir(fullfile(strcat('../../aerogen_yalmip_results/Single/', result_set), '*_full_states.mat'));
+        ctrs_files = dir(fullfile(strcat('../../aerogen_yalmip_results/Single/', result_set), '*_full_ctrs.mat'));
+    else
+        states_files = dir(fullfile(strcat('../../aerogen_yalmip_results/Single/', result_set), '*mps_states.mat'));
+        ctrs_files = dir(fullfile(strcat('../../aerogen_yalmip_results/Single/', result_set), '*mps_ctrs.mat'));
+    end
     for k = 1:length(states_files)
         if states_files(k).isdir
             continue;
@@ -49,7 +61,11 @@ if create_set
         pwr_mesh(find(wind_spd_vec == wind), find(m_ac_vec == mass)) = mean(-ctrs(1, :).*20000.*states(2, :)/1000);
     end
     [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
-    results_name = strcat('Results/', result_set, '_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
+    if use_full_cyl
+        results_name = strcat('Results/', result_set, 'full_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
+    else
+        results_name = strcat('Results/', result_set, '_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
+    end
     results.m_ac_mesh = m_ac_mesh;
     results.wind_spd_mesh = wind_spd_mesh;
     results.pwr_mesh = pwr_mesh;
@@ -58,7 +74,12 @@ end
 
 %% Plot Power Sweep
 if plot_set
-    resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
+    if use_full_cyl
+        resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, 'full*'))).name);
+    else
+        resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '_*'))).name);
+    end
+    
     load(resPath);
     
     figure(1)
