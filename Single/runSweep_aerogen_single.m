@@ -52,6 +52,9 @@ for i = 1:length(m_ac_vec)
         u0 = [];
         if solve_reelin
             load_traction_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
+            if isempty(dir(fullfile(strcat(load_traction_name, '_states.mat'))))
+                break;
+            end
             load(strcat(load_traction_name, '_states.mat'));
             load(strcat(load_traction_name, '_ctrs.mat'));
             x0 = states(:, end);

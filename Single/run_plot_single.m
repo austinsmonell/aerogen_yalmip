@@ -3,20 +3,24 @@ clear
 % close all
 
 %%
-plot_states = 0;
+plot_states = 1;
 plot_set = 1;
 create_set = 1;
 plot_curve = 0;
 use_full_cyl = 1;
+plot_set_mode = 2;%1:reelin 2:full
 
 wind_spd = 12;
-m_ac = 0;
+m_ac = 140;
 result_set = 'res23';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
-    if use_full_cyl
+    if plot_set_mode == 2
         load(strcat(solnPath, '_full_states.mat'))
         load(strcat(solnPath, '_full_ctrs.mat'))
+    elseif plot_set_mode == 1
+        load(strcat(solnPath, '_reelin_states.mat'))
+        load(strcat(solnPath, '_reelin_ctrs.mat'))
     else
         load(strcat(solnPath, '_states.mat'))
         load(strcat(solnPath, '_ctrs.mat'))
