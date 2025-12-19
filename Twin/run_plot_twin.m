@@ -5,7 +5,7 @@ clear
 %%
 addpath('../')
 plot_states = 0;
-plot_set = 0;
+plot_set = 1;
 create_set = 0;
 plot_curve = 1;
 
@@ -69,9 +69,10 @@ if plot_set
     figure(1)
     hold on
     grid on
+    box on
     zlim([0 100])
     view([45, 45])
-    surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
+    s = surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('V-Twin Kite Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
@@ -80,6 +81,9 @@ if plot_set
     xticks(0:50:300);
     yticks(4:1:12);
     zticks(0:20:100);
+    s.FaceColor = 'interp';    % colors vary smoothly across each face
+    s.EdgeColor = 'k';      % hides edges for cleaner look
+    caxis([0 90])
 end
 
 %% Plot Power Curve

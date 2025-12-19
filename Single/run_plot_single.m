@@ -1,16 +1,16 @@
 clc
 clear
-close all
+% close all
 
 %%
 plot_states = 0;
-plot_set = 0;
+plot_set = 1;
 create_set = 0;
-plot_curve = 1;
+plot_curve = 0;
 
 wind_spd = 12;
-m_ac = 60;
-result_set = 'res21';
+m_ac = 0;
+result_set = 'res23';
 if plot_states
     solnPath = strcat('../../aerogen_yalmip_results/Single/', result_set, '/soln_', string(m_ac), 'kg_', string(wind_spd), 'mps');
     load(strcat(solnPath, '_states.mat'))
@@ -64,6 +64,7 @@ if plot_set
     figure(1)
     hold on
     grid on
+    box on
     zlim([0 100])
     view([45, 45])
     for i = 1:size(results.pwr_mesh, 1)
@@ -73,7 +74,7 @@ if plot_set
             end
         end
     end
-    surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
+    s=surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('Single-Kite Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
@@ -82,6 +83,9 @@ if plot_set
     xticks(0:50:300);
     yticks(4:1:12);
     zticks(0:20:100);
+    s.FaceColor = 'interp';    % colors vary smoothly across each face
+    s.EdgeColor = 'k';      % hides edges for cleaner look
+    caxis([0 90])
 end
 
 %% Plot Power Curve
