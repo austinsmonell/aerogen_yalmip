@@ -1,13 +1,13 @@
 clc
 clear
-% close all
+close all
 
 %%
 addpath('../')
 plot_states = 0;
 plot_set = 1;
 create_set = 0;
-plot_curve = 1;
+plot_curve = 0;
 
 wind_spd = 12;
 m_ac = 60;
@@ -66,12 +66,14 @@ if plot_set
     resPath = strcat('Results/', dir(fullfile('Results/',strcat(result_set, '*'))).name);
     load(resPath);
 
-    figure(1)
+    figure()
     hold on
     grid on
     box on
     zlim([0 100])
     view([45, 45])
+    Z = results.pwr_mesh;
+    zero_mask = (Z == 0);     % Exact zero locations
     s = surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
     title('V-Twin Kite Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
@@ -84,6 +86,14 @@ if plot_set
     s.FaceColor = 'interp';    % colors vary smoothly across each face
     s.EdgeColor = 'k';      % hides edges for cleaner look
     caxis([0 90])
+
+    hold on;
+    infeas = surf(results.m_ac_mesh, results.wind_spd_mesh, Z.*0);
+    infeas.FaceColor = 'red';
+    infeas.EdgeColor = 'none';
+    infeas.AlphaData = zero_mask*10;    % Match ZData size
+    infeas.FaceAlpha = 'flat';      % Smooth blending; use 'flat' for per-face
+%     infeas.EdgeColor = 'none';        % Optional: hide edges
 end
 
 %% Plot Power Curve

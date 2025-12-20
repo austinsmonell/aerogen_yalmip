@@ -4,13 +4,13 @@ clear
 
 %%
 plot_set = 1;
-plot_curve = 1;
+plot_curve = 0;
 
 wind_spd = 12;
 m_ac = 60;
-single_set = 'res21';
+single_set = 'res23';
 twin_set = 'res25';
-resPath = strcat('Single/Results/', dir(fullfile('Single/Results/',strcat(single_set, '*'))).name);
+resPath = strcat('Single/Results/', dir(fullfile('Single/Results/',strcat(single_set, 'full_*'))).name);
 
 load(resPath);
 for i = 1:size(results.pwr_mesh, 1)
@@ -26,8 +26,8 @@ load(resPath);
 results_twin = results;
 
 %interpolate
-mass_sweep = 0:0.1:300;
-wnd_sweep = 4:0.01:12;
+mass_sweep = 0:20:300;
+wnd_sweep = 4:2:12;
 [massQ_mesh,wndQ_mesh] = meshgrid(mass_sweep,wnd_sweep);
 
 pwr_single = interp2(results_single.m_ac_mesh, results_single.wind_spd_mesh, results_single.pwr_mesh, massQ_mesh,wndQ_mesh);
@@ -40,38 +40,78 @@ if plot_set
     hold on
     grid on
     view([45, 45])
-    s = surf(massQ_mesh, wndQ_mesh, pwr_twin-pwr_single);
+    
+    Z = pwr_twin - pwr_single;
+    zero_mask = (Z == 0);     % Exact zero locations
+
+    s = surf(massQ_mesh, wndQ_mesh, Z);  % Pass custom C as 4th argument
+    
+    % Rest of your original formatting
     title('Power Curve Difference', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
-    zlabel('Power $\Delta$ [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
-    set(gcf, 'Position',  [100, 100, 1000, 800]);
-    xticks(0:50:300);
+    zlabel('$Power \Delta$ [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    set(gcf, 'Position', [100, 100, 1000, 800]);
+    xticks(0:20:300);
     yticks(4:1:12);
-    zticks(0:20:100);
-    zlim([-1 100])
-    s.FaceColor = 'interp';    % colors vary smoothly across each face
-    s.EdgeColor = 'k';      % hides edges for cleaner look
-    caxis([0 50])
+    zticks(-100:5:100);
+    zlim([-5 40])
+    s.FaceColor = 'interp';
+    s.EdgeColor = 'k';
+    caxis([-1 40])  % Extend caxis low end to include -1 (pink), map Z [0 40] to rest
+    cb = colorbar;
+    cb.Label.String = '$Power\;\Delta$ [kW]';
+    cb.Label.Interpreter = 'latex';
+    cb.Label.FontSize = 20;
 
+    hold on;
+    infeas = surf(massQ_mesh, wndQ_mesh, Z.*0);
+    infeas.FaceColor = 'red';
+    infeas.EdgeColor = 'none';
+    infeas.AlphaData = zero_mask*10;    % Match ZData size
+    infeas.FaceAlpha = 'flat';      % Smooth blending; use 'flat' for per-face
+%     infeas.EdgeColor = 'none';        % Optional: hide edges
+
+
+
+
+    Z2 = (pwr_twin-pwr_single)*100./(pwr_single+0.1);
+    saturate_mask = (Z2 > 100);     % Exact zero locations
     figure()
     hold on
     grid on
-    view([45, 45])
-    s = surf(massQ_mesh, wndQ_mesh, (pwr_twin-pwr_single)*100./(pwr_single+0.1));
+    view([90, 90])
+    s = surf(massQ_mesh, wndQ_mesh, Z2);
     title('Power Curve Percent Difference', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
-    zlabel('Power $\Delta$ [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+%     zlabel('$\%Power\;\Delta$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+%     set(gca,'Xdir','reverse')
     set(gcf, 'Position',  [100, 100, 1000, 800]);
     xticks(0:50:300);
     yticks(4:1:12);
     zticks(0:20:100);
-    zlim([-1 9999999])
+    zlim([-20 101])
     s.FaceColor = 'interp';    % colors vary smoothly across each face
     s.EdgeColor = 'none';      % hides edges for cleaner look
-    caxis([0 100])
-    colorbar
+    caxis([-20 100])
+    cb = colorbar;
+    cb.Label.String = '$\%Power\;\Delta$';  % Replace with your label, e.g., 'Altitude (m)'
+    cb.Label.Interpreter = 'latex';  % Optional: for math symbols like '$z$ (km)'
+    cb.Label.FontSize = 20;
+
+    hold on;
+    infeas = surf(massQ_mesh, wndQ_mesh, Z.*0);
+    infeas.FaceColor = 'red';
+    infeas.EdgeColor = 'none';
+    infeas.AlphaData = zero_mask*10;    % Match ZData size
+    infeas.FaceAlpha = 'flat';      % Smooth blending; use 'flat' for per-face
+
+    saturate = surf(massQ_mesh, wndQ_mesh, Z./Z+100);
+    saturate.FaceColor = '#fffca6';
+    saturate.EdgeColor = 'none';
+    saturate.AlphaData = saturate_mask*10;    % Match ZData size
+    saturate.FaceAlpha = 'flat';      % Smooth blending; use 'flat' for per-face
 end
 
 %% Plot Power Curve

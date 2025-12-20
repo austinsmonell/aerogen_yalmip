@@ -187,7 +187,8 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 
     sgtitle(strcat('Single-Kite States: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 1200, 1000])
-    display(mean(-m_ctr.*x(2, :)/1000))
+%     display(mean(-m_ctr.*x(2, :)/1000))
+    display(sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end))
 
     %% 3D Plot
     figure
@@ -216,7 +217,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     cb.Label.FontSize = 20;
     set(gcf, 'Position',  [1400, 100, 1000, 1000]);
 
-    n_arrows = 2;
+    n_arrows = 4;
 %     idx = round(linspace(1, length(x1)-1, n_arrows));
     idx = mod(round((1:n_arrows)' * length(x1) / n_arrows), length(x1))+1;    
     arrow_pos = [x1(idx)', y1(idx)', z1(idx)'];  % Start points
@@ -231,7 +232,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     qv.AutoScaleFactor = 0.3;
     qv.Marker = '.';
     qv.MarkerFaceColor = 'black';
-    qv.Color = '#FFD700';
+    qv.Color = 'black';
     qv.MaxHeadSize = 0.3;
     
 

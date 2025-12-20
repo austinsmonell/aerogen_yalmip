@@ -6,9 +6,13 @@ save_soln = 1;
 tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
+tf_reelin = 10;
+gridSz_reelin = 80;
+dt_reelin = tf_reelin/(gridSz_reelin-1);
 p = getParams(); p(19) = tf; p(20) = dt;
 num_loops = 6;
-timeVec = linspace(0, tf*(num_loops+1), gridSz*(num_loops+1));
+timeVec_traction = linspace(0, tf, gridSz);
+timeVec_reelin = linspace(0, tf_reelin, gridSz_reelin);
 
 result_set = 'res23';
 
@@ -43,16 +47,20 @@ for k = 1:length(reelin_states_files)
 
     states_full = states;
     ctrs_full = ctrs;
+    timeVec = timeVec_traction;
     for i = 1:num_loops-1
         states_new = states;
         states_new([1, 5], :) = states_new([1, 5], :) + states_full([1, 5], end);
         states_full = [states_full, states_new];
         ctrs_full = [ctrs_full, ctrs];
+        timeVec = [timeVec, timeVec_traction+timeVec(end)];
     end
     load(reelin_state_path)
     load(reelin_ctr_path)
+    states(5, :) = states(5, :)+states(5, 1)*(num_loops-1);%temporary next solve remove
     states = [states_full, states];
     ctrs = [ctrs_full, ctrs];
+    timeVec = [timeVec, timeVec_reelin+timeVec(end)];
 
 %     plot_aerogen_single(states_full,ctrs_full,p,timeVec);
     
@@ -61,5 +69,6 @@ for k = 1:length(reelin_states_files)
         
         save(strcat(save_name, '_full_states.mat'), 'states')
         save(strcat(save_name, '_full_ctrs.mat'), 'ctrs')
+        save(strcat(save_name, '_full_time.mat'), 'timeVec')
     end
 end

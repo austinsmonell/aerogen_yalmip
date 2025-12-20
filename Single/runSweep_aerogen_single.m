@@ -15,8 +15,8 @@ load_path = strcat('../../aerogen_yalmip_results/Single/', 'res23', '/');
 load_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon
 tf = 10;
-gridSz = 60;
-max_time = 120;
+gridSz = 80;
+max_time = 160;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
@@ -26,10 +26,10 @@ p = getParams(); p(19) = tf; p(20) = dt;
 %% Define variables/params
 nx = 8; 
 nu = 3; 
-load_name = strcat(load_path, 'soln_', string(80),'kg_', string(12), 'mps');
+% load_name = strcat(load_path, 'soln_', string(80),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 100:20:300;
+m_ac_vec = 0:20:300;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);

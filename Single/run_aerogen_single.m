@@ -13,7 +13,7 @@ save_path = 'Solns/';
 save_name = 'Solns/warmstart_0kg_12mps';
 % Define horizon
 tf = 10;
-gridSz = 60;
+gridSz = 80;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
@@ -41,6 +41,7 @@ if solve_reelin
     x0 = states(:, end);
     xf = states(:, 1);
     x0(1) = x0(1)*num_loops;
+    x0(5) = x0(5)*num_loops;
     xf(5) = x0(5);
     u0 = ctrs(:, 1);
 end
