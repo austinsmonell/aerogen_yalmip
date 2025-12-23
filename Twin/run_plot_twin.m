@@ -1,17 +1,17 @@
 clc
 clear
-close all
+% close all
 
 %%
 addpath('../')
-plot_states = 0;
+plot_states = 1;
 plot_set = 1;
 create_set = 0;
 plot_curve = 0;
 
 wind_spd = 12;
-m_ac = 60;
-result_set = 'res25';
+m_ac = 100;
+result_set = 'res29';
 
 if plot_states
     
@@ -29,7 +29,7 @@ if plot_states
 end
 %% Create Power Curve
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 0:20:300;
+m_ac_vec = 0:20:400;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 
 if create_set
@@ -70,29 +70,36 @@ if plot_set
     hold on
     grid on
     box on
-    zlim([0 100])
+    zlim([0 125])
+    xlim([0 400])
     view([45, 45])
     Z = results.pwr_mesh;
     zero_mask = (Z == 0);     % Exact zero locations
     s = surf(results.m_ac_mesh, results.wind_spd_mesh, results.pwr_mesh);
-    title('V-Twin Kite Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    title('V-Twin Kite Average Cycle Power', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Kite Mass [kg]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     zlabel('Average Power [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 1000, 800]);
-    xticks(0:50:300);
+    xticks(0:20:400);
     yticks(4:1:12);
-    zticks(0:20:100);
+    zticks(0:20:140);
     s.FaceColor = 'interp';    % colors vary smoothly across each face
     s.EdgeColor = 'k';      % hides edges for cleaner look
-    caxis([0 90])
+    caxis([0 120])
+    colormap((parula(256)))
+    cb = colorbar;
+    cb.Label.String = '$P$ [kW]';  % Replace with your label, e.g., 'Altitude (m)'
+    cb.Label.Interpreter = 'latex';  % Optional: for math symbols like '$z$ (km)'
+    cb.Label.FontSize = 20;
 
     hold on;
     infeas = surf(results.m_ac_mesh, results.wind_spd_mesh, Z.*0);
-    infeas.FaceColor = 'red';
+    infeas.FaceColor = '#808080';
     infeas.EdgeColor = 'none';
     infeas.AlphaData = zero_mask*10;    % Match ZData size
     infeas.FaceAlpha = 'flat';      % Smooth blending; use 'flat' for per-face
+    legend('', 'Infeasible', 'Interpreter', 'latex', 'FontSize',12, 'FontWeight','bold')
 %     infeas.EdgeColor = 'none';        % Optional: hide edges
 end
 

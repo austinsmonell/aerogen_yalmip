@@ -7,29 +7,32 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 1;
-results_run = 'res26';
+use_prev_solution_guess = 0;
+results_run = 'res29';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
-load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res26', '/');
-% load_name = 'Solns/warmstart_0kg_12mps';
+load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res29', '/');
+load_name = 'Solns/warmstart_200kg_12mps';
+load_name = strcat(load_path, 'soln_', string(380),'kg_', string(12), 'mps');
+
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 300;
+max_time = 200;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 10;
+ctr_obj_gain = 2;
 p = getParams(); p(19) = tf; p(20) = dt;
 
 %% Define variables/params
 nx = 14; 
 nu = 5;
-load_name = strcat(load_path, 'soln_', string(100),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec =120:20:300;
+m_ac_vec = 400:20:460;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
+wind_spd_vec = wind_spd_vec(1);%temp
 for i = 1:length(m_ac_vec)
     if i > 1
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
@@ -37,6 +40,9 @@ for i = 1:length(m_ac_vec)
     for j = 1:length(wind_spd_vec)
         if j > 1
             load_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j-1)), 'mps');
+        end
+        if use_prev_solution_guess
+            load_name = strcat(load_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
         end
         yalmip('clear')
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
@@ -56,9 +62,9 @@ for i = 1:length(m_ac_vec)
             load(strcat(load_name, '_ctrs.mat'));
             assign(x, states);
             assign(u, ctrs);
-            options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time);
+            options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time, 'ipopt.tol', 1e-4, 'ipopt.dual_inf_tol', 1e-4, 'ipopt.constr_viol_tol', 1e-4);
         else
-            options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time);
+            options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time, 'ipopt.tol', 1e-4, 'ipopt.dual_inf_tol', 1e-4, 'ipopt.constr_viol_tol', 1e-4);
         end
         
         %% Solve the problem

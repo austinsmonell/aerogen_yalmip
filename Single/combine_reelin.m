@@ -14,7 +14,7 @@ num_loops = 6;
 timeVec_traction = linspace(0, tf, gridSz);
 timeVec_reelin = linspace(0, tf_reelin, gridSz_reelin);
 
-result_set = 'res23';
+result_set = 'res25';
 
 set_path = strcat('../../aerogen_yalmip_results/Single/', result_set, '/');
 reelin_states_files = dir(fullfile(set_path, '*reelin_states.mat'));

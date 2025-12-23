@@ -160,7 +160,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     plot(time, beta1*180/pi, 'LineWidth',2)
     title('$\beta$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('$\beta$', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    ylabel('$\beta$ [deg]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
     grid on
     box on
     fig_val = fig_val+1;
@@ -194,6 +194,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     figure
     hold on
     grid on
+    box on
     axis equal 
     view([35 40])
     x1 = x(6, :); y1 = -x(1, :)*p(1); z1 = x(7, :);
@@ -210,7 +211,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
     ylim([min(y1)-2, max(y1)+2]);
     zlim([min(z1)-10, max(z1)+10]);
     
-    colormap(flipud(turbo(256)))
+    colormap((parula(256)))
     cb = colorbar;
     cb.Label.String = '$P$ [kW]';  % Replace with your label, e.g., 'Altitude (m)'
     cb.Label.Interpreter = 'latex';  % Optional: for math symbols like '$z$ (km)'

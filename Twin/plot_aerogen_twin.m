@@ -215,7 +215,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     plot(time, beta2*180/pi, 'LineWidth',2)
     title('$\beta$', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Time [s]')
-    ylabel('$\beta$', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
+    ylabel('$\beta$ [deg]', 'Interpreter', 'latex', 'FontSize',13, 'FontWeight','bold')
     legend('$\beta_1$', '$\beta_2$', 'Interpreter', 'latex', 'FontSize',10, 'FontWeight','bold')
     grid on
     box on
@@ -243,12 +243,13 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     sgtitle(strcat('V-Twin Kite States: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 1200, 1000])
-    display(mean(-m_ctr.*x(2, :)/1000))
+    display(sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end))
 
     %% 3D Plot
     figure
     hold on
     grid on
+    box on
     axis equal
     view([35 40])
     x1 = x(9, :); y1 = x(1, :)*p(1); z1 = x(10, :);
@@ -256,9 +257,9 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
 %     plot3(x(9, :), x(10, :), x(1, :)*p(1))
 %     plot3(x(11, :), x(12, :), -x(1, :)*p(1))
-    plot3([x1 0],ones(size([y1 0]))*max([y1 y2])+1,[z1 0],'k--')
+    plot3([x1 0],ones(size([y1 0]))*0,[z1 0],'k--')
     patch(x1, y1, z1, -m_ctr.*sigma_dot./1000, 'EdgeColor', 'interp', 'LineWidth', 5, 'FaceColor', 'none');
-    plot3([x2 0],ones(size([y2 0]))*max([y1 y2])+1,[z2 0],'k--')
+    plot3([x2 0],ones(size([y2 0]))*0,[z2 0],'k--')
     patch(x2, y2, z2, -m_ctr.*sigma_dot./1000, 'EdgeColor', 'interp', 'LineWidth', 5, 'FaceColor', 'none');
     title(strcat('V-Twin Kite Trajectory: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('$^wX$ [m]', 'Interpreter', 'latex', 'FontSize',20, 'FontWeight','bold')
@@ -269,7 +270,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     ylim([min([y1 y2])-2, max([y1 y2])+2]);
     zlim([min([z1 z2])-10, max([z1 z2])+10]);
 
-    colormap(flipud(parula(256)))
+    colormap((parula(256)))
     cb = colorbar;
     cb.Label.String = '$P$ [kW]';  % Replace with your label, e.g., 'Altitude (m)'
     cb.Label.Interpreter = 'latex';  % Optional: for math symbols like '$z$ (km)'
@@ -289,7 +290,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     qv = quiver3(arrow_pos(:,1), arrow_pos(:,2), arrow_pos(:,3), ...
         arrow_dir(idx,1), arrow_dir(idx,2), arrow_dir(idx,3), 0.3, 'AutoScale', 'off');
     qv.LineWidth = 3;
-    qv.Color = '#8B0000';
+    qv.Color = 'black';
     qv.MaxHeadSize = 10;
 
     n_arrows = 3;
@@ -304,7 +305,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     qv = quiver3(arrow_pos(:,1), arrow_pos(:,2), arrow_pos(:,3), ...
         arrow_dir(idx,1), arrow_dir(idx,2), arrow_dir(idx,3), 0.3, 'AutoScale', 'off');
     qv.LineWidth = 3;
-    qv.Color = '#8B0000';
+    qv.Color = 'black';
     qv.MaxHeadSize = 10;
 
 

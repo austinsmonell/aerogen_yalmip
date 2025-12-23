@@ -9,14 +9,16 @@ save_soln = 1;
 use_guess = 1;
 solve_reelin = 1;
 num_loops = 6;
-results_run = 'res23';
+results_run = 'res25';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
-load_path = strcat('../../aerogen_yalmip_results/Single/', 'res23', '/');
+load_path = strcat('../../aerogen_yalmip_results/Single/', 'res25', '/');
 load_name = 'Solns/warmstart_0kg_12mps';
+load_name = strcat(load_path, 'soln_', string(240),'kg_', string(12), 'mps');
+
 % Define horizon
 tf = 10;
 gridSz = 80;
-max_time = 160;
+max_time = 500;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
@@ -26,13 +28,13 @@ p = getParams(); p(19) = tf; p(20) = dt;
 %% Define variables/params
 nx = 8; 
 nu = 3; 
-% load_name = strcat(load_path, 'soln_', string(80),'kg_', string(12), 'mps');
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 0:20:300;
+m_ac_vec = 260:20:400;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
+% wind_spd_vec = wind_spd_vec(1);%temp
 for i = 1:length(m_ac_vec)
     if i > 1
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
@@ -83,9 +85,9 @@ for i = 1:length(m_ac_vec)
             end
             assign(x, states);
             assign(u, ctrs);
-            options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time);
+            options = sdpsettings('solver','ipopt', 'usex0', 1, 'ipopt.max_cpu_time', max_time, 'ipopt.tol', 1e-4, 'ipopt.dual_inf_tol', 1e-4, 'ipopt.constr_viol_tol', 1e-4);
         else
-            options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time);
+            options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time, 'ipopt.tol', 1e-4, 'ipopt.dual_inf_tol', 1e-4, 'ipopt.constr_viol_tol', 1e-4);
         end
         
         %% Solve the problem
@@ -105,7 +107,7 @@ for i = 1:length(m_ac_vec)
             title('Single Power Curve')
             xlabel('Mass [kg]')
             ylabel('Wind Speed [mps]')
-            zlabel('Average Power [kw]')
+            zlabel('Average Power [kW]')
             drawnow;
 
             if save_soln
