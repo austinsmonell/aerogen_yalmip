@@ -246,7 +246,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
     display(sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end))
 
     %% 3D Plot
-    figure
+    figure(2)
     hold on
     grid on
     box on

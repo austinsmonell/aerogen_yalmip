@@ -5,17 +5,17 @@ clear
 %%
 plot_set = 1;
 plot_curve = 1;
-use_full_cyl = 1;
+use_full_cyl = 0;
 
 
 wind_spd = 12;
-m_ac = 60;
+m_ac = 20;
 single_set = 'res25';
-twin_set = 'res29';
+twin_set = 'res31';
 if use_full_cyl
     resPath = strcat('Single/Results/', dir(fullfile('Single/Results/',strcat(single_set, 'full_*'))).name);
 else
-    resPath = strcat('Single/Results/', dir(fullfile('Single/Results/',strcat(single_set, '*'))).name);
+    resPath = strcat('Single/Results/', dir(fullfile('Single/Results/',strcat(single_set, '_*'))).name);
 end
 
 load(resPath);
@@ -74,7 +74,7 @@ if plot_set
     hold on
     grid on
     box on
-    view([45, 45])
+    view([90, 90])
     
     Z = pwr_twin - pwr_single;
     zero_mask = (Z == 0);     % Exact zero locations
@@ -90,7 +90,7 @@ if plot_set
     xticks(0:20:400);
     yticks(4:1:12);
     zticks(-100:5:100);
-    zlim([-5 70])
+    zlim([0 70])
     xlim([0 400])
     s.FaceColor = 'interp';
 %     s.EdgeColor = 'k';
@@ -107,7 +107,7 @@ if plot_set
     infeas.EdgeColor = 'none';
     infeas.AlphaData = zero_mask*10;    % Match ZData size
     infeas.FaceAlpha = 'flat';      % Smooth blending; use 'flat' for per-face
-    legend('', 'Infeasible', 'Interpreter', 'latex', 'FontSize',12, 'FontWeight','bold')
+    legend('', 'Infeasible', 'Interpreter', 'latex', 'FontSize',14, 'FontWeight','bold')
 
 %     infeas.EdgeColor = 'none';        % Optional: hide edges
 
@@ -171,24 +171,26 @@ if plot_curve
     pwr_twn = pwr_twin(idx);
 
     wnd_sweep_interp = min(wnd_sweep):0.1:max(wnd_sweep);
-    h(1) = plot(wnd_sweep_interp, interp1(wnd_sweep, pwr_sgl, wnd_sweep_interp, 'cubic'), '--', 'LineWidth',4);
-    h(1).MarkerFaceColor = '#AFEEEE';
-    h(2) = plot(wnd_sweep_interp, interp1(wnd_sweep, pwr_twn, wnd_sweep_interp, 'cubic'), '--', 'LineWidth',4);
+    h(5) = plot(wnd_sweep_interp, 68.921*wnd_sweep_interp.^3./1000, '-', 'LineWidth',4, 'Color', '#fc05ec');
+    h(1) = plot(wnd_sweep_interp, interp1(wnd_sweep, pwr_sgl, wnd_sweep_interp, 'cubic'), '--', 'LineWidth',4, 'Color','#0000FF');
+    h(1).MarkerFaceColor = '#0000FF';
+    h(2) = plot(wnd_sweep_interp, interp1(wnd_sweep, pwr_twn, wnd_sweep_interp, 'cubic'), '--', 'LineWidth',4, 'Color','#f76e19');
     h(2).MarkerFaceColor = '#FAFAD2';
     h(3) = scatter(wnd_sweep, pwr_sgl, 150, 'filled', 'o');
     h(3).MarkerFaceColor = '#008080';
     h(4) = scatter(wnd_sweep, pwr_twn, 150, 'filled', 'o');
     h(4).MarkerFaceColor = '#FFAA00';
-    labels = {'Cubic Interpolation', 'Cubic Interpolation', 'Simulated Single-Kite', 'Simulated V-Twin Kite'}; 
-    neworder = [3, 1, 4, 2];  % Custom order
+    h(6) = plot(wnd_sweep_interp, interp1(wnd_sweep, pwr_sgl, wnd_sweep_interp, 'cubic')*0, '--', 'LineWidth',4, 'Color', '#808080');
+    labels = {'Cubic Interpolation', 'Cubic Interpolation', 'Simulated Single-Kite', 'Simulated V-Twin Kite', 'Theoretical Max Power'}; 
+    neworder = [3, 1, 4, 2, 5];  % Custom order
     lgd = legend(h(neworder), labels(neworder), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold');
     lgd.Location = 'northwest';            % top-left inside axes
     lgd.FontSize = 14;                     % increase text size
 %     legend('Cubic Interpolation', 'Cubic Interpolation', 'Simulated', 'Simulated')
-    title('Single and V-Twin Kite Average Power Curve', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    title('Single and V-Twin Kite Power Curve: 20 kg', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Average Power [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 800, 600]);
     xticks(4:1:12);
-    yticks(0:20:100);
+    yticks(0:20:120);
 end

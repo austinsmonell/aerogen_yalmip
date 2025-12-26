@@ -7,12 +7,12 @@ plot_states = 1;
 plot_set = 1;
 create_set = 1;
 plot_curve = 0;
-use_full_cyl = 1;
-plot_mode = 2;%0:traction 1:reelin 2:full
+use_full_cyl = 0;
+plot_mode = 0;%0:traction 1:reelin 2:full
 
 wind_spd = 12;
-m_ac = 60;
-result_set = 'res25';
+m_ac = 340;
+result_set = 'res26';
 tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
@@ -105,7 +105,7 @@ if plot_set
     grid on
     box on
     zlim([0 120])
-    xlim([0 340])
+    xlim([0 400])
     view([45, 45])
     for i = 1:size(results.pwr_mesh, 1)
         for j = 1:size(results.pwr_mesh, 2)
@@ -123,7 +123,7 @@ if plot_set
     ylabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     zlabel('Average Power [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 1000, 800]);
-    xticks(0:20:340);
+    xticks(0:20:400);
     yticks(4:1:12);
     zticks(0:20:140);
     s.FaceColor = 'interp';    % colors vary smoothly across each face

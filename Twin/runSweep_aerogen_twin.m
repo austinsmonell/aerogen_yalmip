@@ -8,16 +8,16 @@ addpath('..\')
 save_soln = 1;
 use_guess = 1;
 use_prev_solution_guess = 0;
-results_run = 'res29';
+results_run = 'res31';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
-load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res29', '/');
+load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res31', '/');
 load_name = 'Solns/warmstart_200kg_12mps';
-load_name = strcat(load_path, 'soln_', string(380),'kg_', string(12), 'mps');
+load_name = strcat(load_path, 'soln_', string(160),'kg_', string(12), 'mps');
 
 % Define horizon
 tf = 10;
 gridSz = 60;
-max_time = 200;
+max_time = 400;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 2;
@@ -28,11 +28,11 @@ nx = 14;
 nu = 5;
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 400:20:460;
+m_ac_vec = 140:-20:0;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
-wind_spd_vec = wind_spd_vec(1);%temp
+% wind_spd_vec = wind_spd_vec(1);%temp
 for i = 1:length(m_ac_vec)
     if i > 1
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
@@ -85,6 +85,7 @@ for i = 1:length(m_ac_vec)
             xlabel('Mass [kg]')
             ylabel('Wind Speed [mps]')
             zlabel('Average Power [kw]')
+            view([45, 45]);
             drawnow;
 
             if save_soln
