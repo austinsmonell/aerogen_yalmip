@@ -8,11 +8,11 @@ addpath('..\')
 save_soln = 1;
 use_guess = 1;
 use_prev_solution_guess = 0;
-results_run = 'res31';
+results_run = 'res32';
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
-load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res31', '/');
+load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res32', '/');
 load_name = 'Solns/warmstart_200kg_12mps';
-load_name = strcat(load_path, 'soln_', string(160),'kg_', string(12), 'mps');
+load_name = strcat(load_path, 'soln_', string(240),'kg_', string(12), 'mps');
 
 % Define horizon
 tf = 10;
@@ -28,7 +28,7 @@ nx = 14;
 nu = 5;
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;
-m_ac_vec = 140:-20:0;
+m_ac_vec = 220:-20:0;
 soln_fail = 0;
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);

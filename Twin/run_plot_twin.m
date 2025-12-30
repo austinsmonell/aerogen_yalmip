@@ -5,12 +5,12 @@ clear
 %%
 addpath('../')
 plot_states = 1;
-plot_set = 1;
-create_set = 1;
+plot_set = 0;
+create_set = 0;
 plot_curve = 0;
 
 wind_spd = 12;
-m_ac = 120;
+m_ac = 200;
 result_set = 'res31';
 
 if plot_states

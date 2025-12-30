@@ -3,16 +3,16 @@ clear
 close all
 
 %%
-plot_states = 1;
+plot_states = 0;
 plot_set = 1;
 create_set = 1;
 plot_curve = 0;
-use_full_cyl = 0;
+use_full_cyl = 1;
 plot_mode = 0;%0:traction 1:reelin 2:full
 
 wind_spd = 12;
 m_ac = 340;
-result_set = 'res26';
+result_set = 'res27';
 tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);

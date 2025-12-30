@@ -4,10 +4,10 @@ function [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, ctr_obj_gain,
     %1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
     u_up = [1;  1; 1; 1; 1];%; 0; 0];%; 2*pi/dt+1e-6; 2*pi/dt+1e-6];
     u_lw = [-1; -1; -1; -1; -1];%; 0; 0];%; -2*pi/dt-1e-6; -2*pi/dt-1e-6];
-    x_up = [inf; inf; pi/3; pi/3; 200; 200; inf; inf; inf; inf; inf; inf; inf; inf];
-    x_lw = [-inf; -inf; -pi/3; -pi/3; 1; 1; -inf; -inf; -inf; -inf; -inf; -inf; -inf; -inf];
-    x0_up = [0; inf; pi/3; pi/3; 200; 200; pi; pi; 0; 0; 0; 0; inf; inf];
-    x0_lw = [0; -inf; -pi/3; -pi/3; 1; 1; -pi; -pi; 0; 0; 0; 0; -inf; -inf];
+    x_up = [inf; inf; pi/2; pi/2; 200; 200; inf; inf; inf; inf; inf; inf; inf; inf];
+    x_lw = [-inf; -inf; -pi/2; -pi/2; 1; 1; -inf; -inf; -inf; -inf; -inf; -inf; -inf; -inf];
+    x0_up = [0; inf; pi/2; pi/2; 200; 200; pi; pi; 0; 0; 0; 0; inf; inf];
+    x0_lw = [0; -inf; -pi/2; -pi/2; 1; 1; -pi; -pi; 0; 0; 0; 0; -inf; -inf];
     cyl_idx = [1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14];
 
     %% Contraints & Objective

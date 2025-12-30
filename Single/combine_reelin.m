@@ -7,14 +7,14 @@ tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
 tf_reelin = 10;
-gridSz_reelin = 80;
+gridSz_reelin = 60;
 dt_reelin = tf_reelin/(gridSz_reelin-1);
 p = getParams(); p(19) = tf; p(20) = dt;
 num_loops = 6;
 timeVec_traction = linspace(0, tf, gridSz);
 timeVec_reelin = linspace(0, tf_reelin, gridSz_reelin);
 
-result_set = 'res25';
+result_set = 'res27';
 
 set_path = strcat('../../aerogen_yalmip_results/Single/', result_set, '/');
 reelin_states_files = dir(fullfile(set_path, '*reelin_states.mat'));

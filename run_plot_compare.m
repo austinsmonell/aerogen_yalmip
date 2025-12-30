@@ -5,11 +5,11 @@ clear
 %%
 plot_set = 1;
 plot_curve = 1;
-use_full_cyl = 0;
+use_full_cyl = 1;
 
 
 wind_spd = 12;
-m_ac = 20;
+m_ac = 60;
 single_set = 'res25';
 twin_set = 'res31';
 if use_full_cyl
@@ -181,13 +181,13 @@ if plot_curve
     h(4) = scatter(wnd_sweep, pwr_twn, 150, 'filled', 'o');
     h(4).MarkerFaceColor = '#FFAA00';
     h(6) = plot(wnd_sweep_interp, interp1(wnd_sweep, pwr_sgl, wnd_sweep_interp, 'cubic')*0, '--', 'LineWidth',4, 'Color', '#808080');
-    labels = {'Cubic Interpolation', 'Cubic Interpolation', 'Simulated Single-Kite', 'Simulated V-Twin Kite', 'Theoretical Max Power'}; 
+    labels = {'Cubic Interpolation', 'Cubic Interpolation', 'Simulated Single-Kite', 'Simulated V-Twin Kite', 'Single-Kite Theoretical Max'}; 
     neworder = [3, 1, 4, 2, 5];  % Custom order
     lgd = legend(h(neworder), labels(neworder), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold');
     lgd.Location = 'northwest';            % top-left inside axes
     lgd.FontSize = 14;                     % increase text size
 %     legend('Cubic Interpolation', 'Cubic Interpolation', 'Simulated', 'Simulated')
-    title('Single and V-Twin Kite Power Curve: 20 kg', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
+    title(strcat('Single and V-Twin Kite Power Curve: Kite Mass=', num2str(m_ac), ' kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     xlabel('Wind Speed [mps]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     ylabel('Average Power [kW]', 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 800, 600]);

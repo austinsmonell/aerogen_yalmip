@@ -7,7 +7,7 @@ addpath('..\')
 
 save_soln = 1;
 use_guess = 0;
-solve_reelin = 0;
+solve_reelin = 1;
 num_loops = 6;
 save_path = 'Solns/';
 save_name = 'Solns/warmstart_0kg_12mps';
@@ -16,7 +16,7 @@ tf = 10;
 gridSz = 60;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
-ctr_obj_gain = 2;
+ctr_obj_gain = 10;
 wind_spd = 12;
 m_ac = 0;
 p = getParams(); p(19) = tf; p(20) = dt; p(10) = wind_spd; p(3) = m_ac;
