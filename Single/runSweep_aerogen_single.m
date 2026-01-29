@@ -1,40 +1,40 @@
+%% Cleanup
 clc
 clear
-close all
-
+close all 
 yalmip('clear')
 addpath('..\')
 
+%% Run Parameters
 save_soln = 1;
 use_guess = 1;
-solve_reelin = 1;
+solve_reelin = 0;
 num_loops = 6;
 results_run = 'res27';
 save_path = strcat('../../aerogen_yalmip_results/Single/', results_run, '/');
 load_path = strcat('../../aerogen_yalmip_results/Single/', 'res27', '/');
-% load_name = 'Solns/warmstart_0kg_12mps';
-load_name = strcat(load_path, 'soln_', string(80),'kg_', string(12), 'mps');
+load_name = 'Solns/warmstart_0kg_12mps';%initial warm start solution
+% load_name = strcat(load_path, 'soln_', string(80),'kg_', string(12), 'mps');% uncomment if using warm start from previous solution set (not typically nessesary)
 
-% Define horizon
 tf = 10;
 gridSz = 60;
 max_time = 200;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 10;
-p = getParams(); p(19) = tf; p(20) = dt;
-
 
 %% Define variables/params
+p = getParams(); p(19) = tf; p(20) = dt;
 nx = 8; 
 nu = 3; 
 pwr_figure = figure;
-wind_spd_vec = 12:-2:4;
-m_ac_vec = 80:20:400;
-soln_fail = 0;
+wind_spd_vec = 12:-2:4;%wind speed sweep vector
+m_ac_vec = 80:20:400;%mass sweep vector
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
 % wind_spd_vec = wind_spd_vec(1);%temp
+
+%% Sweep through mass and wind speed
 for i = 1:length(m_ac_vec)
     if i > 1
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
@@ -43,22 +43,23 @@ for i = 1:length(m_ac_vec)
         if j > 1    
             load_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j-1)), 'mps');
         end
-        yalmip('clear')
+        yalmip('clear')%clear yalmip cache
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:va, 4: theta, 5:psi, 6:x1, 7:x2
         u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
+
+        %set windspeed and mass
         p(10) = wind_spd_vec(j);
         p(3) = m_ac_vec(i);
-        %% Contraints & Objective
-        x0 = [];
-        xf = [];
-        u0 = [];
+
+        % Contraints & Objective
+        x0 = [];xf = []; u0 = [];
         if solve_reelin
-            load_traction_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
-            if isempty(dir(fullfile(strcat(load_traction_name, '_states.mat'))))
-                break;
+            traction_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
+            if isempty(dir(fullfile(strcat(traction_name, '_states.mat'))))
+                break;%skip if infeasible
             end
-            load(strcat(load_traction_name, '_states.mat'));
-            load(strcat(load_traction_name, '_ctrs.mat'));
+            load(strcat(traction_name, '_states.mat'));
+            load(strcat(traction_name, '_ctrs.mat'));
             x0 = states(:, end);
             xf = states(:, 1);
             x0(1) = x0(1)*num_loops;
@@ -67,18 +68,18 @@ for i = 1:length(m_ac_vec)
         end
         [Constraints,Objective] = getConstObj_single(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u, solve_reelin, x0, xf, u0);
         
-        %% Set some options for YALMIP and solver
+        % Assign warmstart and/or options for YALMIP and solver
         if use_guess
             
-            if solve_reelin
+            if solve_reelin % solve reel_in
                 if isempty(dir(fullfile(strcat(load_name, '_reelin_states.mat'))))
-                    break;
+                    break; %if previous wind speed optimization failed break the wind speed loop
                 end
                 load(strcat(load_name, '_reelin_states.mat'))
                 load(strcat(load_name, '_reelin_ctrs.mat'))
-            else
+            else% solve traction
                 if isempty(dir(fullfile(strcat(load_name, '_states.mat'))))
-                    break;
+                    break; %if previous wind speed optimization failed break the wind speed loop
                 end
                 load(strcat(load_name, '_states.mat'))
                 load(strcat(load_name, '_ctrs.mat'))
@@ -90,12 +91,11 @@ for i = 1:length(m_ac_vec)
             options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time, 'ipopt.tol', 1e-4, 'ipopt.dual_inf_tol', 1e-4, 'ipopt.constr_viol_tol', 1e-4);
         end
         
-        %% Solve the problem
+        % Solve the problem
         sol = optimize(Constraints,Objective,options);
-        soln_fail = sol.problem;
-        %% Analyze error flags
-        if soln_fail == 0
-            % Extract and display value
+        
+        % Plot Solutions/Analyze error flags
+        if sol.problem == 0
             states = value(x);
             ctrs = value(u);
 %             plot_aerogen_single(states,ctrs,p,timeVec);
@@ -113,7 +113,6 @@ for i = 1:length(m_ac_vec)
 
             if save_soln
                 save_name = strcat(save_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
-                
                 if solve_reelin
                     save(strcat(save_name, '_reelin_states.mat'), 'states')
                     save(strcat(save_name, '_reelin_ctrs.mat'), 'ctrs')
@@ -123,24 +122,25 @@ for i = 1:length(m_ac_vec)
                 end
             end
             if pwr_mesh(j, i) < 0 && ~solve_reelin
-                break;
+                break; %if previous wind speed optimization <0 power break the wind speed loop
             end
         else
             disp('Hmm, something went wrong!');
             sol.info
             yalmiperror(sol.problem)
             if j == 1
-                break;
+                break;%stop if failed on first wind speed
             end
         end
     end
 end
+%% Save sweep results
 results_name = strcat('Results/', results_run, '_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
 results.m_ac_mesh = m_ac_mesh;
 results.wind_spd_mesh = wind_spd_mesh;
 results.pwr_mesh = pwr_mesh;
 if solve_reelin
-    save(strcat(results_name, '_reelin.mat'), 'results')
+    save(strcat(results_name, '_reelin.mat'), 'results')%save as reel-in solution
 else
-    save(strcat(results_name, '.mat'), 'results')
+    save(strcat(results_name, '.mat'), 'results')%save as traction solution
 end

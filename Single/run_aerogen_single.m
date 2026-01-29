@@ -32,6 +32,7 @@ u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta_dot), 3:dr1(psi_Dot)
 
     
 %% Contraints & Objective
+x0 = [];xf = []; u0 = [];
 if solve_reelin
     traction_name = strcat(save_path, 'warmstart_', string(m_ac),'kg_', string(wind_spd), 'mps');
     load(strcat(traction_name, '_states.mat'));

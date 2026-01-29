@@ -1,38 +1,39 @@
+%% Cleanup
 clc
 clear
 close all
-
 yalmip('clear')
 addpath('..\')
 
+%% Run Parameters
 save_soln = 1;
 use_guess = 1;
-use_prev_solution_guess = 0;
-results_run = 'res32';
+use_prev_solution_guess = 0;%use solutions set from load_path to warm start (not typically nessesary)
+results_run = 'res32';%name of solution set
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
 load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res32', '/');
-load_name = 'Solns/warmstart_200kg_12mps';
-load_name = strcat(load_path, 'soln_', string(240),'kg_', string(12), 'mps');
+load_name = 'Solns/warmstart_200kg_12mps';%initial warm start solution
+% load_name = strcat(load_path, 'soln_', string(240),'kg_', string(12), 'mps');% uncomment if using warm start from previous solution set
 
-% Define horizon
 tf = 10;
 gridSz = 60;
 max_time = 400;
 dt = tf/(gridSz-1);
 timeVec = linspace(0, tf, gridSz);
 ctr_obj_gain = 2;
-p = getParams(); p(19) = tf; p(20) = dt;
 
 %% Define variables/params
+p = getParams(); p(19) = tf; p(20) = dt;
 nx = 14; 
 nu = 5;
 pwr_figure = figure;
-wind_spd_vec = 12:-2:4;
-m_ac_vec = 220:-20:0;
-soln_fail = 0;
+wind_spd_vec = 12:-2:4;%wind speed sweep vector
+m_ac_vec = 220:-20:0;%mass sweep vector
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
 % wind_spd_vec = wind_spd_vec(1);%temp
+
+%% Sweep through mass and wind speed
 for i = 1:length(m_ac_vec)
     if i > 1
         load_name = strcat(save_path, 'soln_', string(m_ac_vec(i-1)),'kg_', string(wind_spd_vec(1)), 'mps');
@@ -44,19 +45,21 @@ for i = 1:length(m_ac_vec)
         if use_prev_solution_guess
             load_name = strcat(load_path, 'soln_', string(m_ac_vec(i)),'kg_', string(wind_spd_vec(j)), 'mps');
         end
-        yalmip('clear')
+        yalmip('clear')%clear yalmip cache
         x = sdpvar(nx,gridSz);%1:sigma 2:sigma_dot, 3:theta1, 4:theta2, 5:va1, 6:va2, 7:psi1, 8:psi2, 9:x1, 10:y1, 11:x2, 12:y2
         u = sdpvar(nu, gridSz);%1:m_ctr, 2:de1(theta1_dot), 3:de2(theta2_dot), 4:dr1(psi1_dot), 4:dr2(psi2_dot)
 
+        %set windspeed and mass
         p(10) = wind_spd_vec(j);
         p(3) = m_ac_vec(i);
-        %% Contraints & Objective
+        
+        % Contraints & Objective
         [Constraints,Objective] = getConstObj_twin(gridSz, dt, p, ctr_obj_gain, nx, nu, x, u);
         
-        %% Set some options for YALMIP and solver
+        % Assign warmstart and/or options for YALMIP and solver
         if use_guess
             if isempty(dir(fullfile(strcat(load_name, '_states.mat'))))
-                break;
+                break; %if previous wind speed optimization failed break the wind speed loop
             end
             load(strcat(load_name, '_states.mat'));
             load(strcat(load_name, '_ctrs.mat'));
@@ -67,12 +70,11 @@ for i = 1:length(m_ac_vec)
             options = sdpsettings('solver','ipopt', 'ipopt.max_cpu_time', max_time, 'ipopt.tol', 1e-4, 'ipopt.dual_inf_tol', 1e-4, 'ipopt.constr_viol_tol', 1e-4);
         end
         
-        %% Solve the problem
+        % Solve the problem
         sol = optimize(Constraints,Objective,options);
-        soln_fail = sol.problem;
-        %% Analyze error flags
-        if soln_fail == 0
-            % Extract and display value
+        
+        % Plot Solutions/Analyze error flags
+        if sol.problem == 0
             states = value(x);
             ctrs = value(u);
 %             plot_aerogen_twin(states,ctrs,p,timeVec);
@@ -98,11 +100,12 @@ for i = 1:length(m_ac_vec)
             sol.info
             yalmiperror(sol.problem)
             if j == 1
-                break;
+                break;%stop if failed on first wind speed
             end
         end
     end
 end
+%% Save sweep results
 results_name = strcat('Results/', results_run, '_', string(m_ac_vec(1)), 'to', string(m_ac_vec(end)), 'kg_', string(wind_spd_vec(1)), 'to', string(wind_spd_vec(end)), 'mps');
 results.m_ac_mesh = m_ac_mesh;
 results.wind_spd_mesh = wind_spd_mesh;
