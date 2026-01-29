@@ -9,10 +9,10 @@ addpath('..\')
 save_soln = 1;
 use_guess = 1;
 use_prev_solution_guess = 0;%use solutions set from load_path to warm start (not typically nessesary)
-results_run = 'res32';%name of solution set
+results_run = 'res33';%name of solution set
 save_path = strcat('../../aerogen_yalmip_results/Twin/', results_run, '/');
 load_path = strcat('../../aerogen_yalmip_results/Twin/', 'res32', '/');
-load_name = 'Solns/warmstart_200kg_12mps';%initial warm start solution
+load_name = 'Solns/warmstart_0kg_12mps';%initial warm start solution
 % load_name = strcat(load_path, 'soln_', string(240),'kg_', string(12), 'mps');% uncomment if using warm start from previous solution set
 
 tf = 10;
@@ -28,7 +28,7 @@ nx = 14;
 nu = 5;
 pwr_figure = figure;
 wind_spd_vec = 12:-2:4;%wind speed sweep vector
-m_ac_vec = 220:-20:0;%mass sweep vector
+m_ac_vec = 0:20:400;%mass sweep vector
 pwr_mesh = zeros(length(wind_spd_vec), length(m_ac_vec));
 [m_ac_mesh, wind_spd_mesh] = meshgrid(m_ac_vec, wind_spd_vec);
 % wind_spd_vec = wind_spd_vec(1);%temp

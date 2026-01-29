@@ -67,7 +67,7 @@ function [Constraints,Objective] = getConstObj_single(gridSz, dt, p, ctr_obj_gai
 
     Constraints = [Constraints, alpha1 <= (alpha_up*pi/180), alpha1 >= (alpha_low*pi/180),...
                    va1_v./va1_u <= beta_lim*pi/180, va1_v./va1_u >= -beta_lim*pi/180,...
-                   F1_aero_r <= 0];%may needs 100 to create warmstart
+                   F1_aero_r <= 0];%may need to relax to >0 without warmstart
     
     %   control limits
     Constraints = [Constraints, u<=ones(nu, gridSz).*u_up, u>=ones(nu, gridSz).*u_lw];
