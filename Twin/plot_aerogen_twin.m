@@ -243,7 +243,7 @@ sigma_dot_dot = ((-F1_aero_r+F2_aero_r)*r_gen+m_ctr)/(moi_g+2*(m_ac+m_teth)*r_ge
 
     sgtitle(strcat('V-Twin Kite States: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 1200, 1000])
-    display(sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end))
+    fprintf('V-Twin Average Power: %2.1f kW\n',sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end));
 
     %% 3D Plot
     figure(2)

@@ -187,8 +187,7 @@ sigma_dot_dot = (-F1_aero_r*r_gen+m_ctr)/(moi_g+(m_ac+m_teth)*r_gen^2);
 
     sgtitle(strcat('Single-Kite States: Wind=', string(vw), 'mps Mass=', string(m_ac), 'kg'), 'Interpreter', 'latex', 'FontSize',15, 'FontWeight','bold')
     set(gcf, 'Position',  [100, 100, 1200, 1000])
-%     display(mean(-m_ctr.*x(2, :)/1000))
-    display(sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end))
+    fprintf('Single Average Power: %2.1f kW\n',sum((-m_ctr(2:end).*x(2, 2:end)/1000).*diff(time))/time(end));
 
     %% 3D Plot
     figure
