@@ -100,7 +100,7 @@ for i = 1:length(m_ac_vec)
             ctrs = value(u);
 %             plot_aerogen_single(states,ctrs,p,timeVec);
 
-            pwr_mesh(j, i) = mean(-u(1, :).*20000.*x(2, :)/1000);
+            pwr_mesh(j, i) = mean(-u(1, :).*p(22).*x(2, :)/1000);
             close(pwr_figure);
             pwr_figure = figure;
             surf(m_ac_mesh, wind_spd_mesh, pwr_mesh);

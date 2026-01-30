@@ -8,7 +8,7 @@ addpath('..\')%directory with other results for warmstart
 %% Run Parameters
 save_soln = 0;%set to 1 to save solution to Solns/...
 use_guess = 0;%set to 1 to use solution to warm start optimizer
-solve_reelin = 1;%set to 1 to solve reel-in phase for coorisponding traction phase in save_path
+solve_reelin = 0;%set to 1 to solve reel-in phase for coorisponding traction phase in save_path
 num_loops = 6;%number of traction cycles to concatinate for reel-in
 save_path = 'Solns/';%location of traction solution for reel-in
 save_name = 'Solns/warmstart_0kg_12mps';

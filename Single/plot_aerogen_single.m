@@ -11,11 +11,11 @@ x1 = x(6, :);
 y1 = x(7, :);
 va1_v = x(8, :);
 
-%Controls: dist1
-m_ctr = u(1, :)*20000;
-de1 = u(2, :)*1;
-ds1 = 0;
-dr1 = u(3, :)*4*pi/(p(19)+p(20));
+%% Extract and Scale Control Inputs
+m_ctr = u(1, :)*p(22);              % Motor torque [N*m] (scaled from normalized)
+de1 = u(2, :)*p(23);                    % Elevator: pitch rate command [rad/s]
+dr1 = u(3, :)*p(24)/(p(19)+p(20));   % Rudder: yaw rate command [rad/s]
+ds1 = 0;   
 
 % extract parameters
 r_gen = p(1);
