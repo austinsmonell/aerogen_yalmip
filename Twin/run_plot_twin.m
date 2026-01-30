@@ -1,6 +1,6 @@
 clc
 clear
-% close all
+close all
 
 %%
 addpath('../')
