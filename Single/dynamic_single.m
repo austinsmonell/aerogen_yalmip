@@ -95,7 +95,7 @@ y1_dot = -va1_u.*sin(psi1)-va1_v.*cos(psi1);    % Wind frame y velocity
 psi1_dot = dr1;                         % Yaw rate command
 theta1_dot = de1;                       % Pitch rate command
 
-% --- Coriolis Terms ---
+% --- Euler Frame Acceleration Terms ---
 a_u = va1_v.*psi1_dot;                  % Coriolis term: yaw to u-velocity
 a_v = -va1_u.*psi1_dot;                 % Coriolis term: yaw to v-velocity
 

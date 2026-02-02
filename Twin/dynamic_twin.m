@@ -135,7 +135,7 @@ psi1_dot = dr1;                         % Kite 1 yaw rate command
 psi2_dot = dr2;                         % Kite 2 yaw rate command
 
 
-% --- Coriolis Terms ---
+% --- Euler Frame Acceleration Terms ---
 a_u1 = va1_v.*psi1_dot;                 % Kite 1 coupling: yaw to u-velocity
 a_v1 = -va1_u.*psi1_dot;                % Kite 1 coupling: yaw to v-velocity
 a_u2 = va2_v.*psi2_dot;                 % Kite 2 coupling: yaw to u-velocity
